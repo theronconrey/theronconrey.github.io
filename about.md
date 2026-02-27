@@ -10,6 +10,6 @@ Years ago, my first post was hammered out with vi and .html files and posted to 
 
 As I've started writing again, I've decided to move to github pages.  
 
-While I'd love to migrate every post out of wordpress backups, I'm going to leave most posts as retired. I've migrated a few posts that still get brought up from time to time, but if you're looking for a conference presentation, I likely still have it somewhere! 
+I'm going to leave most posts as retired, but I have migrated a few posts that still get brought up from time to time. If I've posted something in the past and you're looking for it, let me know.
 
 -theron
