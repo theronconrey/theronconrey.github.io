@@ -1,4 +1,8 @@
-
+---
+layout: post 
+title: "Cause of Death" 
+date: 2007-10-08
+---
 
 I'm going to stop by and see [Mark][beercrazy], and see about getting a beer going that I've been thinking about for a while now.  [Cause of Death][causeofdeath] is a recipe from Johnny Max of the [Brewcrazy][brewcrazy] podcast.  I'll list the recipe below as well. It's going to be a monster.  If you're interested in helping out, let me know, and I'll try and nail down the dates that this will take place. 
 
