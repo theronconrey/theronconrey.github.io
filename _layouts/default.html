@@ -1,8 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link type="application/atom+xml" rel="alternate" href="{{ '/feed.xml' | relative_url }}" title="{{ site.title }}">
+  <style>
+    body, html { background-color: #000 !important; color: #fff !important; }
+    .site-header, .site-footer, .page-content { background-color: #000 !important; border-color: #333 !important; }
+    a { color: #ccc !important; }
+    a:hover { color: #fff !important; }
+    .site-title, .site-title:visited { color: #fff !important; }
+    .post-link { color: #fff !important; }
+    .post-meta { color: #aaa !important; }
+    .site-footer { color: #888 !important; }
+    code { background: #1a1a1a !important; color: #f8f8f2 !important; }
+    pre { background: #1a1a1a !important; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+    blockquote { border-left: 3px solid #444 !important; color: #aaa !important; }
+
+    .top-nav {
+      background-color: #111;
+      border-bottom: 1px solid #333;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+    }
+    .top-nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+    .top-nav ul a { color: #ccc !important; text-decoration: none; font-size: 0.95rem; }
+    .top-nav ul a:hover { color: #fff !important; }
+    .nav-rss a { display: flex; align-items: center; text-decoration: none; }
+    .nav-rss svg { width: 22px; height: 22px; fill: #f26522; }
+    .nav-rss a:hover svg { fill: #ff8c42; }
+
+    .search-wrap { margin: 2rem 0 1rem; }
+    #search-input {
+      width: 100%; padding: 0.5rem 0.75rem;
+      background: #111; border: 1px solid #444;
+      color: #fff; font-size: 1rem; border-radius: 4px; box-sizing: border-box;
+    }
+    #search-input::placeholder { color: #666; }
+    #search-input:focus { outline: none; border-color: #888; }
+    #no-results { color: #888; font-style: italic; }
+  </style>
 </head>
 <body>
 
   <nav class="top-nav">
-    <ul class="nav-links">
+    <ul>
       <li><a href="{{ '/' | relative_url }}">Home</a></li>
       <li><a href="{{ '/posts' | relative_url }}">Posts</a></li>
       <li><a href="{{ '/about' | relative_url }}">About</a></li>
@@ -10,11 +57,7 @@
     <div class="nav-rss">
       <a href="{{ '/feed.xml' | relative_url }}" title="RSS Feed">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20
-                   C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56
-                   15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0
-                   5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4
-                   12.93V10.1z"/>
+          <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20 C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
         </svg>
       </a>
     </div>
