@@ -10,6 +10,6 @@ Years ago, my first post was hammered out with vi and .html files and posted to 
 
 As I've started writing again, I've decided to move to github pages. I'm going to leave most posts as retired, but I have migrated a few posts that still get brought up from time to time. If I've posted something in the past and you're looking for it, let me know.
 
-Why 48 &#176; 48 &#176; is (roughly) the latitude of Grand Marais MN! 
+Why 48&#176;? 48&#176; is (roughly) the latitude of Grand Marais MN! 
 
 -theron
