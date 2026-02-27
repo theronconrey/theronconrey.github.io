@@ -1,1 +1,3 @@
-layout: homeShare
+---
+layout: home
+---
