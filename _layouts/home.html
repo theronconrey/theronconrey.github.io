@@ -15,17 +15,13 @@ layout: default
     <p>Could not load profile.</p>
   </div>
 
-  <hr style="border-color: #222; margin: 1rem 0 2rem;" />
-
   {% if site.posts.size > 0 %}
-    <h2 style="color: #aaa; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem;">Recent Posts</h2>
-    <ul class="post-list">
+    <h2 style="color: #aaa; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 2rem 0 0.75rem;">Recent Posts</h2>
+    <ul style="list-style: none; margin: 0; padding: 0;">
       {% for post in site.posts limit:5 %}
-        <li>
-          <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-          <h3>
-            <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-          </h3>
+        <li style="display: flex; align-items: baseline; gap: 1rem; padding: 0.4rem 0;">
+          <span style="font-size: 1rem; font-weight: bold; color: #aaa; white-space: nowrap;">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <a href="{{ post.url | relative_url }}" style="font-size: 1rem; font-weight: normal; color: #fff; text-decoration: none;">{{ post.title | escape }}</a>
         </li>
       {% endfor %}
     </ul>
@@ -47,10 +43,8 @@ layout: default
       document.getElementById('profile-avatar').src = data.avatar || '';
       document.getElementById('profile-name').textContent = data.display_name || username;
 
-      // Strip HTML tags from bio (Mastodon returns it as HTML)
-      const bioHTML = data.note || '';
       const tmp = document.createElement('div');
-      tmp.innerHTML = bioHTML;
+      tmp.innerHTML = data.note || '';
       document.getElementById('profile-bio').textContent = tmp.textContent || tmp.innerText || '';
 
       document.getElementById('profile-section').style.display = 'block';
