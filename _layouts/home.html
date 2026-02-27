@@ -28,28 +28,3 @@ layout: default
   {% endif %}
 
 </div>
-
-<script>
-  (async function () {
-    const instance = 'hachyderm.io';
-    const username = 'theronconrey';
-    const url = `https://${instance}/api/v1/accounts/lookup?acct=${username}`;
-
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-
-      document.getElementById('profile-avatar').src = data.avatar || '';
-      document.getElementById('profile-name').textContent = data.display_name || username;
-
-      const tmp = document.createElement('div');
-      tmp.innerHTML = data.note || '';
-      document.getElementById('profile-bio').textContent = tmp.textContent || tmp.innerText || '';
-
-      document.getElementById('profile-section').style.display = 'block';
-    } catch (e) {
-      document.getElementById('profile-error').style.display = 'block';
-    }
-  })();
-</script>
