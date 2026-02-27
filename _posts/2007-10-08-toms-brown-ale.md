@@ -1,3 +1,9 @@
+---
+layout: post 
+title: "Tom's Brown Ale" 
+date: 2007-10-08
+---
+
 # American Brown Ale
 I initially brewed this Brown Ale for my Dad's return from Iraq.  This is by far my hands down favorite brew.  With 10 gallons on tap I invited some friends over to try it, and 10 gallons of this goes **FAST**. I did manage to save some for my Dad, and all parties agreed that this was one of the best that I'd brewed.  I'm going to be brewing this again shortly, quite possibly the brew I'll make down at Raccoon River for teach a friend to homebrew days...
 
