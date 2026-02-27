@@ -1,0 +1,6 @@
+title: Forty Eight Degrees
+description: fortyeightdegrees.com
+theme: minima
+
+plugins:
+  - jekyll-feed
