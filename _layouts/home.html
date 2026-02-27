@@ -3,9 +3,24 @@ layout: default
 ---
 
 <div class="home">
+
+  <div id="profile-section" style="text-align: center; padding: 3rem 1rem 2rem; display: none;">
+    <img id="profile-avatar" src="" alt="Profile photo"
+         style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 1rem;" />
+    <h1 id="profile-name" style="margin: 0.5rem 0 0.25rem; font-size: 1.6rem; color: #fff;"></h1>
+    <p id="profile-bio" style="color: #ccc; max-width: 500px; margin: 0 auto 1rem; line-height: 1.6;"></p>
+  </div>
+
+  <div id="profile-error" style="display: none; text-align: center; padding: 2rem; color: #666;">
+    <p>Could not load profile.</p>
+  </div>
+
+  <hr style="border-color: #222; margin: 1rem 0 2rem;" />
+
   {% if site.posts.size > 0 %}
+    <h2 style="color: #aaa; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem;">Recent Posts</h2>
     <ul class="post-list">
-      {% for post in site.posts %}
+      {% for post in site.posts limit:5 %}
         <li>
           <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
           <h3>
@@ -15,4 +30,32 @@ layout: default
       {% endfor %}
     </ul>
   {% endif %}
+
 </div>
+
+<script>
+  (async function () {
+    const instance = 'hachyderm.io';
+    const username = 'theronconrey';
+    const url = `https://${instance}/api/v1/accounts/lookup?acct=${username}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+
+      document.getElementById('profile-avatar').src = data.avatar || '';
+      document.getElementById('profile-name').textContent = data.display_name || username;
+
+      // Strip HTML tags from bio (Mastodon returns it as HTML)
+      const bioHTML = data.note || '';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = bioHTML;
+      document.getElementById('profile-bio').textContent = tmp.textContent || tmp.innerText || '';
+
+      document.getElementById('profile-section').style.display = 'block';
+    } catch (e) {
+      document.getElementById('profile-error').style.display = 'block';
+    }
+  })();
+</script>
