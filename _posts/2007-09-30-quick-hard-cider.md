@@ -1,3 +1,5 @@
+layout: post title: "Quick Hard Cider" date: 2007-09-30
+
 During the last [IBU][ibu-site] meeting, one of the members, [Mike][mike-site], brought in a hard cider for a few of us to try.  I'm not usually a fan of hard ciders, but I gave it a try.  It was fantastic, and with a dead simple recipe, it's easy for brewers (anyone really) of all skill levels to try.  I started a batch of this today.  So, without further ado, here's the recipe:
 
 # Hard Cider
