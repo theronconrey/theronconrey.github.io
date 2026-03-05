@@ -70,6 +70,11 @@ title: Mead Recipes
     text-align: right;
   }
 
+  /* ── Auth ── */
+  .mead-auth { display: flex; align-items: center; gap: 0.6rem; }
+  .mead-auth-user { font-size: 0.78rem; color: var(--text3); display: flex; align-items: center; gap: 0.5rem; }
+  .mead-auth-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #333; }
+
   /* ── Toolbar ── */
   .mead-toolbar {
     display: flex;
@@ -425,7 +430,8 @@ title: Mead Recipes
       <option value="oldest">Oldest first</option>
       <option value="name">A → Z</option>
     </select>
-    <button class="mead-btn mead-btn-primary" onclick="meadOpenForm()">+ New Recipe</button>
+    <div class="mead-auth" id="mead-auth-area"></div>
+    <button class="mead-btn mead-btn-primary" onclick="meadRequireAuth(meadOpenForm)">+ New Recipe</button>
   </div>
 
   <!-- Grid -->
@@ -525,6 +531,12 @@ title: Mead Recipes
   import {
     getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc
   } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+  // 🔧 After first sign-in, open browser console and copy your UID from the log below, then paste it here
+  const ALLOWED_UID = "YOUR_GOOGLE_UID";
 
   const firebaseConfig = {
     apiKey:            "AIzaSyD5QzjXBxaVEfhJzM1I_Z0AM6wIuxxlPLQ",
@@ -535,12 +547,64 @@ title: Mead Recipes
     appId:             "1:304297463643:web:f05472fd2136bcccbf947e"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-  const COL = "mead_recipes";
+  const app      = initializeApp(firebaseConfig);
+  const db       = getFirestore(app);
+  const auth     = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const COL      = "mead_recipes";
 
   let allRecipes = [];
   let editingId  = null;
+  let currentUser = null;
+
+  // ── Auth helpers ──
+  function isAllowed(user) {
+    return user && user.uid === ALLOWED_UID;
+  }
+
+  function updateAuthUI(user) {
+    const area = document.getElementById('mead-auth-area');
+    if (isAllowed(user)) {
+      area.innerHTML = `
+        <div class="mead-auth-user">
+          ${user.photoURL ? `<img class="mead-auth-avatar" src="${user.photoURL}" alt=""/>` : ''}
+          <span>${user.displayName || 'Signed in'}</span>
+        </div>
+        <button class="mead-btn mead-btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.7rem" onclick="meadSignOut()">Sign out</button>`;
+    } else {
+      area.innerHTML = '';
+    }
+  }
+
+  window.meadRequireAuth = async function(callback) {
+    if (isAllowed(currentUser)) {
+      callback();
+      return;
+    }
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Your UID (copy this into ALLOWED_UID):", user.uid);
+      if (!isAllowed(user)) {
+        await signOut(auth);
+        toast('Access denied — not an authorised account', 'error');
+        return;
+      }
+      callback();
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user') toast('Sign-in failed', 'error');
+    }
+  };
+
+  window.meadSignOut = async function() {
+    await signOut(auth);
+    toast('Signed out');
+  };
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    updateAuthUI(user);
+  });
 
   function esc(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
