@@ -1,0 +1,807 @@
+---
+layout: default
+title: Mead Recipes
+---
+
+<style>
+  /* ── Scoped to mead page ── */
+  .mead {
+    --amber:    #c47c1a;
+    --amber-lt: #f0a832;
+    --amber-bg: rgba(196,124,26,0.12);
+    --amber-bdr:rgba(196,124,26,0.3);
+    --surface:  #111;
+    --surface2: #1a1a1a;
+    --border:   #2a2a2a;
+    --border2:  #333;
+    --text:     #fff;
+    --text2:    #aaa;
+    --text3:    #666;
+    --red:      #e05a4a;
+    --red-bg:   rgba(224,90,74,0.12);
+    --radius:   10px;
+    --radius-sm:6px;
+    --shadow:   0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+    --shadow-lg:0 8px 40px rgba(0,0,0,0.4);
+    font-family: inherit;
+    color: var(--text);
+  }
+
+  /* ── Page hero ── */
+  .mead-hero {
+    padding: 2.5rem 0 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #222;
+    margin-bottom: 2rem;
+  }
+  .mead-hero h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .mead-hero h1 em {
+    font-style: italic;
+    color: var(--amber-lt);
+  }
+  .mead-hero p {
+    color: var(--text2);
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+  }
+  .mead-stat-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--amber-lt);
+    line-height: 1;
+    text-align: right;
+  }
+  .mead-stat-label {
+    font-size: 0.72rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+    text-align: right;
+  }
+
+  /* ── Auth ── */
+  .mead-auth { display: flex; align-items: center; gap: 0.6rem; }
+  .mead-auth-user { font-size: 0.78rem; color: var(--text3); display: flex; align-items: center; gap: 0.5rem; }
+  .mead-auth-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #333; }
+
+  /* ── Toolbar ── */
+  .mead-toolbar {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .mead-search {
+    flex: 1; min-width: 0;
+    position: relative;
+  }
+  .mead-search svg {
+    position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3); pointer-events: none;
+  }
+  .mead-search input {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.55rem 0.9rem 0.55rem 2.2rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .mead-search input:focus { border-color: var(--amber); }
+  .mead-search input::placeholder { color: var(--text3); }
+
+  .mead-select {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    font-size: 0.88rem;
+    padding: 0.55rem 0.9rem;
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 140px;
+  }
+  .mead-select:focus { border-color: var(--amber); }
+  .mead-select option { background: #111; }
+
+  .mead-btn {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.58rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .mead-btn-primary { background: #fff; color: #000; }
+  .mead-btn-primary:hover { background: #ddd; }
+  .mead-btn-amber { background: var(--amber); color: #fff; }
+  .mead-btn-amber:hover { background: #a86814; }
+  .mead-btn-ghost {
+    background: transparent;
+    border: 1px solid #333;
+    color: var(--text2);
+  }
+  .mead-btn-ghost:hover { border-color: #555; color: #fff; }
+  .mead-btn-danger {
+    background: var(--red-bg);
+    border: 1px solid rgba(224,90,74,0.3);
+    color: var(--red);
+    font-size: 0.8rem;
+    padding: 0.45rem 0.9rem;
+  }
+  .mead-btn-danger:hover { background: rgba(224,90,74,0.2); }
+
+  /* ── Grid ── */
+  #mead-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .mead-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    animation: meadFadeIn 0.3s ease both;
+  }
+  @keyframes meadFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .mead-card:hover {
+    border-color: var(--amber-bdr);
+    background: #161616;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .mead-card-header {
+    display: flex; align-items: flex-start; gap: 0.65rem;
+  }
+  .mead-card-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--amber-bg);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem;
+  }
+  .mead-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.25;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .mead-card-date { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+  .mead-card-desc {
+    font-size: 0.85rem; color: var(--text2);
+    font-style: italic; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .mead-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: auto; }
+  .mead-chip {
+    font-size: 0.72rem; font-weight: 500;
+    padding: 0.2rem 0.55rem; border-radius: 99px;
+    background: #1a1a1a; color: var(--text2);
+    border: 1px solid #2a2a2a;
+  }
+  .mead-chip.amber {
+    background: var(--amber-bg);
+    color: var(--amber-lt);
+    border-color: var(--amber-bdr);
+  }
+
+  /* Empty / loading */
+  .mead-empty {
+    grid-column: 1/-1; text-align: center;
+    padding: 4rem 2rem; color: var(--text3);
+  }
+  .mead-empty-icon { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.4; }
+  .mead-empty h3 { font-size: 1.1rem; color: var(--text2); margin-bottom: 0.3rem; }
+  .mead-loading {
+    grid-column: 1/-1;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.65rem; padding: 3.5rem; color: var(--text3); font-size: 0.88rem;
+  }
+  .mead-spinner {
+    width: 18px; height: 18px;
+    border: 2px solid #333; border-top-color: var(--amber);
+    border-radius: 50%; animation: meadSpin 0.7s linear infinite;
+  }
+  @keyframes meadSpin { to { transform: rotate(360deg); } }
+
+  /* ── Modals ── */
+  .mead-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem; overflow-y: auto;
+  }
+  .mead-overlay.open { display: flex; }
+
+  .mead-modal {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 14px;
+    width: 100%; max-width: 660px;
+    margin: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: meadModalIn 0.22s ease;
+    overflow: hidden;
+  }
+  @keyframes meadModalIn {
+    from { opacity: 0; transform: scale(0.97) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .mead-modal-header {
+    padding: 1.35rem 1.5rem 1.1rem;
+    border-bottom: 1px solid #222;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .mead-modal-header h2 {
+    font-size: 1.15rem; font-weight: 600; color: #fff;
+  }
+  .mead-modal-close {
+    background: #1a1a1a; border: none; color: var(--text2);
+    width: 28px; height: 28px; border-radius: 50%;
+    cursor: pointer; font-size: 1rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .mead-modal-close:hover { background: #333; color: #fff; }
+  .mead-modal-body { padding: 1.5rem; }
+  .mead-modal-footer {
+    padding: 1.1rem 1.5rem;
+    border-top: 1px solid #222;
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 0.6rem; flex-wrap: wrap;
+  }
+  .mead-modal-footer .spacer { flex: 1; }
+
+  /* ── Form ── */
+  .mead-form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .mead-form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .mead-form-group.full { grid-column: 1/-1; }
+  .mead-label {
+    font-size: 0.72rem; font-weight: 600;
+    color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .mead-form-grid input[type="text"],
+  .mead-form-grid textarea {
+    background: #0d0d0d !important;
+    border: 1px solid #2a2a2a !important;
+    border-radius: var(--radius-sm) !important;
+    color: #fff !important;
+    font-size: 0.9rem !important;
+    padding: 0.55rem 0.8rem !important;
+    outline: none !important;
+    resize: vertical !important;
+    width: 100% !important;
+    transition: border-color 0.15s !important;
+    font-family: inherit !important;
+  }
+  .mead-form-grid input:focus,
+  .mead-form-grid textarea:focus {
+    border-color: var(--amber) !important;
+  }
+  .mead-form-grid textarea { min-height: 76px; line-height: 1.5; }
+  .mead-form-grid input::placeholder,
+  .mead-form-grid textarea::placeholder { color: #444 !important; }
+
+  .mead-section-divider {
+    grid-column: 1/-1;
+    font-size: 0.68rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text3);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #1f1f1f;
+    margin-top: 0.4rem;
+  }
+
+  .mead-dyn-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .mead-dyn-item { display: flex; gap: 0.4rem; align-items: center; }
+  .mead-dyn-item input { flex: 1; }
+  .mead-item-num {
+    width: 20px; text-align: right;
+    font-size: 0.78rem; color: var(--text3); flex-shrink: 0;
+  }
+  .mead-remove {
+    background: none; border: 1px solid #2a2a2a; color: var(--text3);
+    border-radius: 5px; width: 26px; height: 26px; cursor: pointer;
+    font-size: 1rem; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .mead-remove:hover { border-color: rgba(224,90,74,0.4); color: var(--red); }
+  .mead-add-btn {
+    background: none; border: 1px dashed #2a2a2a; color: var(--text3);
+    border-radius: var(--radius-sm); padding: 0.4rem; cursor: pointer;
+    font-size: 0.82rem; width: 100%; transition: all 0.15s; font-family: inherit;
+  }
+  .mead-add-btn:hover { border-color: var(--amber); color: var(--amber-lt); }
+
+  /* ── View modal ── */
+  .mead-view-hero {
+    background: linear-gradient(135deg, rgba(196,124,26,0.15), rgba(196,124,26,0.05));
+    border-bottom: 1px solid var(--amber-bdr);
+    padding: 1.5rem;
+  }
+  .mead-view-hero h2 {
+    font-size: 1.4rem; font-weight: 700; color: #fff;
+    line-height: 1.2; margin-bottom: 0.4rem;
+  }
+  .mead-view-desc { color: var(--text2); font-style: italic; font-size: 0.9rem; }
+  .mead-view-pills {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem;
+  }
+  .mead-view-pill {
+    font-size: 0.78rem; font-weight: 500;
+    padding: 0.25rem 0.7rem; border-radius: 99px;
+    background: rgba(196,124,26,0.15);
+    border: 1px solid var(--amber-bdr);
+    color: var(--amber-lt);
+  }
+
+  .mead-view-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.35rem; }
+  .mead-view-section h4 {
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text3); margin-bottom: 0.6rem;
+  }
+  .mead-view-section p,
+  .mead-view-section li { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
+  .mead-view-section ul,
+  .mead-view-section ol { padding-left: 1.3rem; }
+  .mead-view-section li { margin-bottom: 0.3rem; }
+
+  /* ── Toast ── */
+  #mead-toast {
+    position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #fff; color: #000;
+    padding: 0.65rem 1.3rem; border-radius: 99px;
+    font-size: 0.85rem; font-weight: 500;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+    opacity: 0; z-index: 999; pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    white-space: nowrap;
+  }
+  #mead-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  #mead-toast.error { background: #e05a4a; color: #fff; }
+
+  @media (max-width: 600px) {
+    .mead-form-grid { grid-template-columns: 1fr; }
+    .mead-hero { padding: 1.5rem 0 1rem; }
+  }
+</style>
+
+<div class="mead">
+
+
+  <!-- Hero -->
+  <div class="mead-hero">
+    <div>
+      <h1>Mead <em>recipes.</em></h1>
+      <p>A living collection of honey wine brews.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
+      <div id="mead-auth-area" class="mead-auth"></div>
+      <div>
+        <div class="mead-stat-num" id="stat-count">—</div>
+        <div class="mead-stat-label">Recipes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="mead-toolbar">
+    <div class="mead-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="mead-search-input" placeholder="Search recipes…" oninput="meadFilter()"/>
+    </div>
+    <select class="mead-select" id="mead-sort" onchange="meadFilter()">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="name">A → Z</option>
+    </select>
+    <button class="mead-btn mead-btn-primary" onclick="meadRequireAuth()">+ New Recipe</button>
+  </div>
+
+  <!-- Grid -->
+  <div id="mead-grid">
+    <div class="mead-loading"><div class="mead-spinner"></div>Loading…</div>
+  </div>
+
+</div>
+
+<!-- Form Modal -->
+<div class="mead-overlay" id="mead-form-modal">
+  <div class="mead-modal">
+    <div class="mead-modal-header">
+      <h2 id="mead-form-title">New Recipe</h2>
+      <button class="mead-modal-close" onclick="meadCloseModal('mead-form-modal')">×</button>
+    </div>
+    <div class="mead-modal-body">
+      <div class="mead-form-grid">
+        <div class="mead-form-group full">
+          <label class="mead-label">Recipe Name *</label>
+          <input type="text" id="mf-name" placeholder="e.g. Summer Wildflower Traditional"/>
+        </div>
+        <div class="mead-form-group full">
+          <label class="mead-label">Description</label>
+          <textarea id="mf-desc" placeholder="Tasting notes, style, inspiration…"></textarea>
+        </div>
+
+        <div class="mead-section-divider">Batch Details</div>
+
+        <div class="mead-form-group">
+          <label class="mead-label">Batch Size</label>
+          <input type="text" id="mf-batch" placeholder="e.g. 1 gallon"/>
+        </div>
+        <div class="mead-form-group">
+          <label class="mead-label">Expected ABV</label>
+          <input type="text" id="mf-abv" placeholder="e.g. 12–14%"/>
+        </div>
+        <div class="mead-form-group">
+          <label class="mead-label">Original Gravity (OG)</label>
+          <input type="text" id="mf-og" placeholder="e.g. 1.110"/>
+        </div>
+        <div class="mead-form-group">
+          <label class="mead-label">Final Gravity (FG)</label>
+          <input type="text" id="mf-fg" placeholder="e.g. 1.005"/>
+        </div>
+        <div class="mead-form-group full">
+          <label class="mead-label">Fermentation Timeline</label>
+          <input type="text" id="mf-timeline" placeholder="e.g. Primary 3 wks, Secondary 6 wks, Bulk age 3 mo"/>
+        </div>
+        <div class="mead-form-group full">
+          <label class="mead-label">Yeast &amp; Nutrient Schedule</label>
+          <textarea id="mf-yeast" placeholder="Yeast strain, TOSNA schedule, Fermaid-O doses…"></textarea>
+        </div>
+
+        <div class="mead-section-divider">Ingredients</div>
+        <div class="mead-form-group full">
+          <div class="mead-dyn-list" id="mead-ingredients"></div>
+          <button class="mead-add-btn" onclick="meadAddItem('mead-ingredients','ingredient','e.g. 3 lbs wildflower honey')">+ Add ingredient</button>
+        </div>
+
+        <div class="mead-section-divider">Instructions</div>
+        <div class="mead-form-group full">
+          <div class="mead-dyn-list" id="mead-steps"></div>
+          <button class="mead-add-btn" onclick="meadAddItem('mead-steps','step','e.g. Sanitize all equipment')">+ Add step</button>
+        </div>
+
+        <div class="mead-section-divider">Notes</div>
+        <div class="mead-form-group full">
+          <label class="mead-label">Tasting Log &amp; Notes</label>
+          <textarea id="mf-notes" placeholder="Observations, batch results, what to change next time…" style="min-height:90px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mead-modal-footer">
+      <button class="mead-btn mead-btn-danger" id="mead-delete-btn" style="display:none" onclick="meadDelete()">Delete recipe</button>
+      <div class="spacer"></div>
+      <button class="mead-btn mead-btn-ghost" onclick="meadCloseModal('mead-form-modal')">Cancel</button>
+      <button class="mead-btn mead-btn-amber" onclick="meadSave()">Save Recipe</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="mead-overlay" id="mead-view-modal">
+  <div class="mead-modal">
+    <div style="position:relative">
+      <button class="mead-modal-close" style="position:absolute;top:1.1rem;right:1.1rem;z-index:2" onclick="meadCloseModal('mead-view-modal')">×</button>
+      <div id="mead-view-content"></div>
+    </div>
+  </div>
+</div>
+
+<div id="mead-toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+  // 🔧 After first sign-in, open browser console and copy your UID from the log below, then paste it here
+  const ALLOWED_UID = "grWPdNZs5ARG25mh3CHdBzmnjko1";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyD5QzjXBxaVEfhJzM1I_Z0AM6wIuxxlPLQ",
+    authDomain:        "mead-tracker-fe5b9.firebaseapp.com",
+    projectId:         "mead-tracker-fe5b9",
+    storageBucket:     "mead-tracker-fe5b9.firebasestorage.app",
+    messagingSenderId: "304297463643",
+    appId:             "1:304297463643:web:f05472fd2136bcccbf947e"
+  };
+
+  const app      = initializeApp(firebaseConfig);
+  const db       = getFirestore(app);
+  const auth     = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const COL      = "mead_recipes";
+
+  let allRecipes = [];
+  let editingId  = null;
+  let currentUser = null;
+
+  // ── Auth helpers ──
+  function isAllowed(user) {
+    return user && user.uid === ALLOWED_UID;
+  }
+
+  function updateAuthUI(user) {
+    const area = document.getElementById('mead-auth-area');
+    if (isAllowed(user)) {
+      area.innerHTML = `
+        <div class="mead-auth-user">
+          ${user.photoURL ? `<img class="mead-auth-avatar" src="${user.photoURL}" alt=""/>` : ''}
+          <span>${user.displayName || 'Signed in'}</span>
+        </div>
+        <button class="mead-btn mead-btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.7rem" onclick="meadSignOut()">Sign out</button>`;
+    } else {
+      area.innerHTML = '';
+    }
+  }
+
+  window.meadRequireAuth = async function() {
+    if (isAllowed(currentUser)) {
+      meadOpenForm();
+      return;
+    }
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      if (user.uid !== ALLOWED_UID) {
+        await signOut(auth);
+        toast('Access denied — not an authorised account', 'error');
+        return;
+      }
+      currentUser = user;
+      updateAuthUI(user);
+      meadOpenForm();
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user') toast('Sign-in failed', 'error');
+    }
+  };
+
+  window.meadSignOut = async function() {
+    await signOut(auth);
+    toast('Signed out');
+  };
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    updateAuthUI(user);
+  });
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  }
+  function toast(msg, type='') {
+    const t = document.getElementById('mead-toast');
+    t.textContent = msg; t.className = `show ${type}`;
+    setTimeout(() => t.className = '', 2800);
+  }
+
+  async function load() {
+    try {
+      const snap = await getDocs(collection(db, COL));
+      allRecipes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render(allRecipes);
+    } catch(e) {
+      render([]);
+      toast('Could not load — check Firebase config', 'error');
+    }
+  }
+
+  function sorted(list) {
+    const m = document.getElementById('mead-sort').value;
+    return [...list].sort((a,b) => {
+      if (m === 'name')   return (a.name||'').localeCompare(b.name||'');
+      if (m === 'oldest') return (a.createdAt||'').localeCompare(b.createdAt||'');
+      return (b.createdAt||'').localeCompare(a.createdAt||'');
+    });
+  }
+
+  function render(list) {
+    document.getElementById('stat-count').textContent = allRecipes.length;
+    const grid = document.getElementById('mead-grid');
+    const s = sorted(list);
+    if (!s.length) {
+      grid.innerHTML = `<div class="mead-empty"><div class="mead-empty-icon">🍯</div><h3>No recipes yet</h3><p>Add your first batch to get started.</p></div>`;
+      return;
+    }
+    grid.innerHTML = s.map((r,i) => `
+      <div class="mead-card" style="animation-delay:${i*0.04}s" onclick="meadView('${r.id}')">
+        <div class="mead-card-header">
+          <div class="mead-card-icon">🍶</div>
+          <div style="flex:1;min-width:0">
+            <div class="mead-card-title">${esc(r.name||'Untitled')}</div>
+            <div class="mead-card-date">${fmtDate(r.createdAt)}</div>
+          </div>
+        </div>
+        ${r.description ? `<p class="mead-card-desc">${esc(r.description)}</p>` : ''}
+        <div class="mead-chips">
+          ${r.abv   ? `<span class="mead-chip amber">${esc(r.abv)} ABV</span>` : ''}
+          ${r.batch ? `<span class="mead-chip">${esc(r.batch)}</span>` : ''}
+          ${(r.ingredients||[]).filter(Boolean).length ? `<span class="mead-chip">${(r.ingredients||[]).filter(Boolean).length} ingredients</span>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  window.meadFilter = function() {
+    const q = document.getElementById('mead-search-input').value.toLowerCase();
+    render(allRecipes.filter(r =>
+      (r.name||'').toLowerCase().includes(q) ||
+      (r.description||'').toLowerCase().includes(q) ||
+      (r.notes||'').toLowerCase().includes(q)
+    ));
+  };
+
+  window.meadView = function(id) {
+    const r = allRecipes.find(x => x.id === id); if (!r) return;
+    const ingr  = (r.ingredients||[]).filter(Boolean);
+    const steps = (r.steps||[]).filter(Boolean);
+    document.getElementById('mead-view-content').innerHTML = `
+      <div class="mead-view-hero">
+        <h2>${esc(r.name||'Untitled')}</h2>
+        ${r.description ? `<p class="mead-view-desc">${esc(r.description)}</p>` : ''}
+        <div class="mead-view-pills">
+          ${r.abv      ? `<span class="mead-view-pill">🍶 ${esc(r.abv)} ABV</span>` : ''}
+          ${r.batch    ? `<span class="mead-view-pill">⚗ ${esc(r.batch)}</span>` : ''}
+          ${r.og       ? `<span class="mead-view-pill">OG ${esc(r.og)}</span>` : ''}
+          ${r.fg       ? `<span class="mead-view-pill">FG ${esc(r.fg)}</span>` : ''}
+          ${r.timeline ? `<span class="mead-view-pill">📅 ${esc(r.timeline)}</span>` : ''}
+        </div>
+      </div>
+      <div class="mead-view-body">
+        ${ingr.length  ? `<div class="mead-view-section"><h4>Ingredients</h4><ul>${ingr.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>` : ''}
+        ${r.yeast      ? `<div class="mead-view-section"><h4>Yeast &amp; Nutrient Schedule</h4><p>${esc(r.yeast)}</p></div>` : ''}
+        ${steps.length ? `<div class="mead-view-section"><h4>Instructions</h4><ol>${steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>` : ''}
+        ${r.notes      ? `<div class="mead-view-section"><h4>Tasting Log &amp; Notes</h4><p>${esc(r.notes)}</p></div>` : ''}
+        <div style="padding-top:0.5rem;border-top:1px solid #222;display:flex;gap:0.6rem;justify-content:flex-end">
+          <button class="mead-btn mead-btn-ghost" onclick="meadCloseModal('mead-view-modal')">Close</button>
+          <button class="mead-btn mead-btn-amber" onclick="meadCloseModal('mead-view-modal');meadOpenForm('${r.id}')">Edit</button>
+        </div>
+      </div>`;
+    document.getElementById('mead-view-modal').classList.add('open');
+  };
+
+  window.meadOpenForm = function(id) {
+    editingId = id || null;
+    const r = id ? allRecipes.find(x => x.id === id) : null;
+    document.getElementById('mead-form-title').textContent = r ? 'Edit Recipe' : 'New Recipe';
+    document.getElementById('mead-delete-btn').style.display = r ? 'inline-flex' : 'none';
+    document.getElementById('mf-name').value     = r?.name || '';
+    document.getElementById('mf-desc').value     = r?.description || '';
+    document.getElementById('mf-batch').value    = r?.batch || '';
+    document.getElementById('mf-abv').value      = r?.abv || '';
+    document.getElementById('mf-og').value       = r?.og || '';
+    document.getElementById('mf-fg').value       = r?.fg || '';
+    document.getElementById('mf-timeline').value = r?.timeline || '';
+    document.getElementById('mf-yeast').value    = r?.yeast || '';
+    document.getElementById('mf-notes').value    = r?.notes || '';
+    buildList('mead-ingredients', r?.ingredients || [''], 'ingredient', 'e.g. 3 lbs wildflower honey');
+    buildList('mead-steps',       r?.steps       || [''], 'step',       'e.g. Sanitize all equipment');
+    document.getElementById('mead-form-modal').classList.add('open');
+  };
+
+  window.meadSave = async function() {
+    const name = document.getElementById('mf-name').value.trim();
+    if (!name) { toast('Recipe name is required', 'error'); return; }
+    const data = {
+      name,
+      description: document.getElementById('mf-desc').value.trim(),
+      batch:       document.getElementById('mf-batch').value.trim(),
+      abv:         document.getElementById('mf-abv').value.trim(),
+      og:          document.getElementById('mf-og').value.trim(),
+      fg:          document.getElementById('mf-fg').value.trim(),
+      timeline:    document.getElementById('mf-timeline').value.trim(),
+      yeast:       document.getElementById('mf-yeast').value.trim(),
+      notes:       document.getElementById('mf-notes').value.trim(),
+      ingredients: getVals('mead-ingredients'),
+      steps:       getVals('mead-steps'),
+      updatedAt:   new Date().toISOString(),
+    };
+    try {
+      if (editingId) {
+        await updateDoc(doc(db, COL, editingId), data);
+        toast('Recipe updated');
+      } else {
+        data.createdAt = new Date().toISOString();
+        await addDoc(collection(db, COL), data);
+        toast('Recipe saved');
+      }
+      meadCloseModal('mead-form-modal');
+      await load();
+    } catch(e) { toast('Save failed', 'error'); }
+  };
+
+  window.meadDelete = async function() {
+    if (!editingId || !confirm('Permanently delete this recipe?')) return;
+    try {
+      await deleteDoc(doc(db, COL, editingId));
+      toast('Recipe deleted');
+      meadCloseModal('mead-form-modal');
+      await load();
+    } catch(e) { toast('Delete failed', 'error'); }
+  };
+
+  function buildList(id, vals, type, ph) {
+    const el = document.getElementById(id);
+    el.innerHTML = '';
+    (vals.length ? vals : ['']).forEach(v => meadAddItem(id, type, ph, v));
+  }
+
+  window.meadAddItem = function(id, type, ph, val='') {
+    const c = document.getElementById(id);
+    const isStep = type === 'step';
+    const d = document.createElement('div');
+    d.className = 'mead-dyn-item';
+    d.innerHTML = `
+      ${isStep ? `<span class="mead-item-num">${c.children.length+1}.</span>` : ''}
+      <input type="text" placeholder="${ph}" value="${esc(val)}"/>
+      <button class="mead-remove" onclick="this.closest('.mead-dyn-item').remove();meadRenum('${id}','${type}')" title="Remove">−</button>`;
+    c.appendChild(d);
+  };
+
+  window.meadRenum = function(id, type) {
+    if (type !== 'step') return;
+    document.querySelectorAll(`#${id} .mead-item-num`).forEach((el,i) => el.textContent = `${i+1}.`);
+  };
+
+  function getVals(id) {
+    return [...document.getElementById(id).querySelectorAll('input')]
+      .map(i => i.value.trim()).filter(Boolean);
+  }
+
+  window.meadCloseModal = function(id) { document.getElementById(id).classList.remove('open'); };
+
+  document.querySelectorAll('.mead-overlay').forEach(el =>
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
+  );
+
+  load();
+</script>
