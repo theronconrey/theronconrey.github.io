@@ -524,6 +524,7 @@ title: Mead Recipes
   </div>
 </div>
 
+<div id="mead-uid-debug" style="position:fixed;bottom:4rem;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #444;color:#f0a832;padding:0.75rem 1.25rem;border-radius:8px;font-size:0.85rem;z-index:9999;white-space:nowrap"></div>
 <div id="mead-toast"></div>
 
 <script type="module">
@@ -584,7 +585,7 @@ title: Mead Recipes
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("Your UID (copy this into ALLOWED_UID):", user.uid);
+      document.getElementById('mead-uid-debug').textContent = 'Your UID: ' + user.uid;
       if (!isAllowed(user)) {
         await signOut(auth);
         toast('Access denied — not an authorised account', 'error');
