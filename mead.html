@@ -1,0 +1,966 @@
+_--
+layout: default
+title: Mead Recipes
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mead Recipes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #f9f6f1;
+      --surface:  #ffffff;
+      --surface2: #f3ede4;
+      --border:   #e8e0d4;
+      --border2:  #d4c9b8;
+      --text:     #1c1812;
+      --text2:    #6b6257;
+      --text3:    #9e958a;
+      --amber:    #c47c1a;
+      --amber-lt: #f0a832;
+      --amber-bg: #fdf3e0;
+      --amber-bdr:#f0d09a;
+      --red:      #c0392b;
+      --red-bg:   #fdf0ef;
+      --radius:   12px;
+      --radius-sm:8px;
+      --shadow:   0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+      --shadow-lg:0 8px 40px rgba(0,0,0,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Top nav bar ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+    .topbar-brand .logo-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--amber), var(--amber-lt));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .topbar-brand .brand-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .topbar-brand .brand-name span { color: var(--amber); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 3.5rem 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero-inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .hero h1 em { font-style: italic; color: var(--amber); }
+    .hero-sub {
+      color: var(--text2);
+      margin-top: 0.6rem;
+      font-size: 1rem;
+      font-weight: 300;
+    }
+    .stat-row { display: flex; gap: 2rem; }
+    .stat { text-align: right; }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    /* ── Main container ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    /* ── Config banner ── */
+    #config-banner {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-bdr);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .banner-icon { font-size: 1.3rem; flex-shrink: 0; padding-top: 1px; }
+    .banner-body { flex: 1; }
+    .banner-body strong {
+      display: block;
+      font-weight: 600;
+      color: var(--amber);
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+    .banner-body ol {
+      padding-left: 1.2rem;
+      color: var(--text2);
+      font-size: 0.88rem;
+      line-height: 1.8;
+    }
+    .banner-body code {
+      background: rgba(196,124,26,0.12);
+      color: var(--amber);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .banner-dismiss {
+      background: none; border: none; color: var(--text3);
+      cursor: pointer; font-size: 1.2rem; line-height: 1;
+      padding: 2px; transition: color 0.15s; flex-shrink: 0;
+    }
+    .banner-dismiss:hover { color: var(--text); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      flex: 1; min-width: 220px;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute; left: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3); pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-wrap input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(196,124,26,0.12);
+    }
+    .search-wrap input::placeholder { color: var(--text3); }
+
+    .filter-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.6rem 1rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .filter-select:focus { border-color: var(--amber); }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.62rem 1.25rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--text); color: #fff; }
+    .btn-primary:hover { background: #333; transform: translateY(-1px); }
+    .btn-ghost {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+    .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+    .btn-amber { background: var(--amber); color: #fff; }
+    .btn-amber:hover { background: #a86814; }
+    .btn-danger {
+      background: var(--red-bg);
+      border: 1px solid #f0c0bb;
+      color: var(--red);
+      font-size: 0.83rem;
+      padding: 0.5rem 1rem;
+    }
+    .btn-danger:hover { background: #fbe0de; }
+
+    /* ── Recipe Grid ── */
+    #recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .recipe-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      animation: fadeIn 0.35s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .recipe-card:hover {
+      border-color: var(--amber-bdr);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .card-emoji {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: var(--amber-bg);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .card-title-wrap { flex: 1; min-width: 0; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-date { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text2);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+    .chip {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      border-radius: 99px;
+      background: var(--surface2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+    .chip.amber {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border-color: var(--amber-bdr);
+    }
+
+    /* Empty / loading */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text3);
+    }
+    .empty-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.5; }
+    .empty-state h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--text2);
+      margin-bottom: 0.4rem;
+    }
+    .empty-state p { font-size: 0.9rem; }
+    .loading-wrap {
+      grid-column: 1/-1;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; padding: 4rem; color: var(--text3); font-size: 0.9rem;
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--amber);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Modal ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(28,24,18,0.5);
+      backdrop-filter: blur(6px);
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%; max-width: 680px;
+      margin: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalIn 0.25s ease;
+      overflow: hidden;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.97) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 1.5rem 1.75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .modal-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .modal-close {
+      background: var(--surface2);
+      border: none;
+      color: var(--text2);
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text); }
+
+    .modal-body { padding: 1.75rem; }
+    .modal-footer {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .modal-footer .spacer { flex: 1; }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text2);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      padding: 0.6rem 0.85rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+      width: 100%;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(196,124,26,0.1);
+      background: #fff;
+    }
+    textarea { min-height: 80px; line-height: 1.55; }
+    ::placeholder { color: var(--text3); }
+    select option { background: #fff; }
+
+    .form-section-label {
+      grid-column: 1 / -1;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      margin-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dynamic-list { display: flex; flex-direction: column; gap: 0.45rem; }
+    .dynamic-item { display: flex; gap: 0.4rem; align-items: center; }
+    .dynamic-item input { flex: 1; }
+    .item-num {
+      width: 22px; text-align: right;
+      font-size: 0.8rem; color: var(--text3);
+      flex-shrink: 0; font-weight: 500;
+    }
+    .remove-item {
+      background: none; border: 1px solid var(--border); color: var(--text3);
+      border-radius: 6px; width: 28px; height: 28px; cursor: pointer;
+      font-size: 1rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .remove-item:hover { border-color: #f0c0bb; color: var(--red); background: var(--red-bg); }
+    .add-item-btn {
+      background: none;
+      border: 1px dashed var(--border2);
+      color: var(--text3);
+      border-radius: var(--radius-sm);
+      padding: 0.45rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      width: 100%;
+      transition: all 0.15s;
+    }
+    .add-item-btn:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+
+    /* ── View modal ── */
+    .view-hero {
+      background: linear-gradient(135deg, var(--amber-bg), #fff9f0);
+      border-bottom: 1px solid var(--amber-bdr);
+      padding: 1.75rem;
+    }
+    .view-hero h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      color: var(--text);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .view-hero-desc {
+      color: var(--text2);
+      font-style: italic;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+    .view-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .view-pill {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+      background: #fff;
+      border: 1px solid var(--amber-bdr);
+      color: var(--amber);
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+
+    .view-sections { padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .view-section h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text3);
+      margin-bottom: 0.75rem;
+    }
+    .view-section p { color: var(--text2); font-size: 0.93rem; line-height: 1.65; }
+    .view-section ol, .view-section ul {
+      padding-left: 1.4rem;
+      color: var(--text2);
+      font-size: 0.93rem;
+    }
+    .view-section li { margin-bottom: 0.4rem; line-height: 1.55; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--text);
+      color: #fff;
+      padding: 0.7rem 1.4rem;
+      border-radius: 99px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+      opacity: 0; z-index: 999; pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast.success::before { content: '✓  '; }
+    #toast.error::before   { content: '⚠  '; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .hero { padding: 2rem 1.25rem 1.5rem; }
+      .container { padding: 0 1.25rem 4rem; }
+      .topbar { padding: 0 1.25rem; }
+      .stat-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="topbar-brand" href="#">
+    <div class="logo-mark">🍯</div>
+    <span class="brand-name">Mead<span>craft</span></span>
+  </a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Your mead<br><em>recipe collection.</em></h1>
+      <p class="hero-sub">Store, browse and share all your brewing recipes in one place.</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num" id="stat-count">—</div>
+        <div class="stat-label">Recipes</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="config-banner">
+    <div class="banner-icon">🔧</div>
+    <div class="banner-body">
+      <strong>Firebase setup required</strong>
+      <ol>
+        <li>Create a project at <strong>console.firebase.google.com</strong></li>
+        <li>Enable <strong>Firestore Database</strong> (test mode)</li>
+        <li>Add a Web App → copy your config object</li>
+        <li>Replace the <code>firebaseConfig</code> in the &lt;script&gt; block below</li>
+      </ol>
+    </div>
+    <button class="banner-dismiss" onclick="document.getElementById('config-banner').style.display='none'" title="Dismiss">×</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search recipes…" oninput="filterRecipes()"/>
+    </div>
+    <select class="filter-select" id="sort-select" onchange="filterRecipes()">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="name">A → Z</option>
+    </select>
+    <button class="btn btn-primary" onclick="openForm()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Recipe
+    </button>
+  </div>
+
+  <div id="recipe-grid">
+    <div class="loading-wrap"><div class="spinner"></div>Loading recipes…</div>
+  </div>
+
+</div>
+
+<!-- Form Modal -->
+<div class="overlay" id="form-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="form-title">New Recipe</h2>
+      <button class="modal-close" onclick="closeModal('form-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Recipe Name *</label>
+          <input type="text" id="f-name" placeholder="e.g. Summer Wildflower Traditional"/>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="f-desc" placeholder="Tasting notes, style, inspiration…"></textarea>
+        </div>
+
+        <div class="form-section-label">Batch Details</div>
+
+        <div class="form-group">
+          <label>Batch Size</label>
+          <input type="text" id="f-batch" placeholder="e.g. 1 gallon"/>
+        </div>
+        <div class="form-group">
+          <label>Expected ABV</label>
+          <input type="text" id="f-abv" placeholder="e.g. 12–14%"/>
+        </div>
+        <div class="form-group">
+          <label>Original Gravity (OG)</label>
+          <input type="text" id="f-og" placeholder="e.g. 1.110"/>
+        </div>
+        <div class="form-group">
+          <label>Final Gravity (FG)</label>
+          <input type="text" id="f-fg" placeholder="e.g. 1.005"/>
+        </div>
+        <div class="form-group full">
+          <label>Fermentation Timeline</label>
+          <input type="text" id="f-timeline" placeholder="e.g. Primary 3 wks, Secondary 6 wks, Bulk age 3 mo"/>
+        </div>
+        <div class="form-group full">
+          <label>Yeast &amp; Nutrient Schedule</label>
+          <textarea id="f-yeast" placeholder="Yeast strain, TOSNA / DADY schedule, Fermaid-O doses…"></textarea>
+        </div>
+
+        <div class="form-section-label">Ingredients</div>
+        <div class="form-group full">
+          <div class="dynamic-list" id="ingredients-list"></div>
+          <button class="add-item-btn" onclick="addListItem('ingredients-list','ingredient','e.g. 3 lbs wildflower honey')">+ Add ingredient</button>
+        </div>
+
+        <div class="form-section-label">Instructions</div>
+        <div class="form-group full">
+          <div class="dynamic-list" id="steps-list"></div>
+          <button class="add-item-btn" onclick="addListItem('steps-list','step','e.g. Sanitize all equipment')">+ Add step</button>
+        </div>
+
+        <div class="form-section-label">Notes</div>
+        <div class="form-group full">
+          <label>Tasting Log &amp; Notes</label>
+          <textarea id="f-notes" placeholder="Observations, what to adjust next time, batch results…" style="min-height:100px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="delete-btn" style="display:none" onclick="deleteRecipe()">Delete recipe</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="closeModal('form-modal')">Cancel</button>
+      <button class="btn btn-amber" onclick="saveRecipe()">Save Recipe</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="overlay" id="view-modal">
+  <div class="modal">
+    <div style="position:relative">
+      <button class="modal-close" style="position:absolute;top:1.25rem;right:1.25rem;z-index:2" onclick="closeModal('view-modal')">×</button>
+      <div id="view-content"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyD5QzjXBxaVEfhJzM1I_Z0AM6wIuxxlPLQ",
+    authDomain:        "mead-tracker-fe5b9.firebaseapp.com",
+    projectId:         "mead-tracker-fe5b9",
+    storageBucket:     "mead-tracker-fe5b9.firebasestorage.app",
+    messagingSenderId: "304297463643",
+    appId:             "1:304297463643:web:f05472fd2136bcccbf947e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  const COL = "mead_recipes";
+
+  let allRecipes = [];
+  let editingId  = null;
+
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  }
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = `show ${type}`;
+    setTimeout(() => t.className = '', 2800);
+  }
+
+  async function loadRecipes() {
+    try {
+      const snap = await getDocs(collection(db, COL));
+      allRecipes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderGrid(allRecipes);
+    } catch(e) {
+      renderGrid([]);
+      showToast('Could not load — check Firebase config', 'error');
+    }
+  }
+
+  function getSorted(list) {
+    const mode = document.getElementById('sort-select').value;
+    return [...list].sort((a,b) => {
+      if (mode === 'name')   return (a.name||'').localeCompare(b.name||'');
+      if (mode === 'oldest') return (a.createdAt||'').localeCompare(b.createdAt||'');
+      return (b.createdAt||'').localeCompare(a.createdAt||'');
+    });
+  }
+
+  function renderGrid(list) {
+    document.getElementById('stat-count').textContent = allRecipes.length;
+    const grid   = document.getElementById('recipe-grid');
+    const sorted = getSorted(list);
+    if (!sorted.length) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍯</div><h3>No recipes yet</h3><p>Add your first batch to get started.</p></div>`;
+      return;
+    }
+    grid.innerHTML = sorted.map((r,i) => `
+      <div class="recipe-card" style="animation-delay:${i*0.04}s" onclick="viewRecipe('${r.id}')">
+        <div class="card-header">
+          <div class="card-emoji">🍶</div>
+          <div class="card-title-wrap">
+            <div class="card-title">${esc(r.name||'Untitled')}</div>
+            <div class="card-date">${fmtDate(r.createdAt)}</div>
+          </div>
+        </div>
+        ${r.description ? `<p class="card-desc">${esc(r.description)}</p>` : ''}
+        <div class="card-tags">
+          ${r.abv   ? `<span class="chip amber">${esc(r.abv)} ABV</span>` : ''}
+          ${r.batch ? `<span class="chip">${esc(r.batch)}</span>` : ''}
+          ${(r.ingredients||[]).filter(Boolean).length ? `<span class="chip">${(r.ingredients||[]).filter(Boolean).length} ingredients</span>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.filterRecipes = function() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    renderGrid(allRecipes.filter(r =>
+      (r.name||'').toLowerCase().includes(q) ||
+      (r.description||'').toLowerCase().includes(q) ||
+      (r.notes||'').toLowerCase().includes(q)
+    ));
+  };
+
+  window.viewRecipe = function(id) {
+    const r = allRecipes.find(x => x.id === id); if (!r) return;
+    const ingr  = (r.ingredients||[]).filter(Boolean);
+    const steps = (r.steps||[]).filter(Boolean);
+    document.getElementById('view-content').innerHTML = `
+      <div class="view-hero">
+        <h2>${esc(r.name||'Untitled')}</h2>
+        ${r.description ? `<p class="view-hero-desc">${esc(r.description)}</p>` : ''}
+        <div class="view-pills">
+          ${r.abv      ? `<span class="view-pill">🍶 ${esc(r.abv)} ABV</span>` : ''}
+          ${r.batch    ? `<span class="view-pill">⚗ ${esc(r.batch)}</span>` : ''}
+          ${r.og       ? `<span class="view-pill">OG ${esc(r.og)}</span>` : ''}
+          ${r.fg       ? `<span class="view-pill">FG ${esc(r.fg)}</span>` : ''}
+          ${r.timeline ? `<span class="view-pill">📅 ${esc(r.timeline)}</span>` : ''}
+        </div>
+      </div>
+      <div class="view-sections">
+        ${ingr.length  ? `<div class="view-section"><h4>Ingredients</h4><ul>${ingr.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>` : ''}
+        ${r.yeast      ? `<div class="view-section"><h4>Yeast &amp; Nutrient Schedule</h4><p>${esc(r.yeast)}</p></div>` : ''}
+        ${steps.length ? `<div class="view-section"><h4>Instructions</h4><ol>${steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>` : ''}
+        ${r.notes      ? `<div class="view-section"><h4>Tasting Log &amp; Notes</h4><p>${esc(r.notes)}</p></div>` : ''}
+        <div style="padding-top:0.5rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;justify-content:flex-end">
+          <button class="btn btn-ghost" onclick="closeModal('view-modal')">Close</button>
+          <button class="btn btn-amber" onclick="closeModal('view-modal');openForm('${r.id}')">Edit Recipe</button>
+        </div>
+      </div>`;
+    document.getElementById('view-modal').classList.add('open');
+  };
+
+  window.openForm = function(id) {
+    editingId = id || null;
+    const r = id ? allRecipes.find(x => x.id === id) : null;
+    document.getElementById('form-title').textContent = r ? 'Edit Recipe' : 'New Recipe';
+    document.getElementById('delete-btn').style.display = r ? 'inline-flex' : 'none';
+    document.getElementById('f-name').value     = r?.name || '';
+    document.getElementById('f-desc').value     = r?.description || '';
+    document.getElementById('f-batch').value    = r?.batch || '';
+    document.getElementById('f-abv').value      = r?.abv || '';
+    document.getElementById('f-og').value       = r?.og || '';
+    document.getElementById('f-fg').value       = r?.fg || '';
+    document.getElementById('f-timeline').value = r?.timeline || '';
+    document.getElementById('f-yeast').value    = r?.yeast || '';
+    document.getElementById('f-notes').value    = r?.notes || '';
+    buildList('ingredients-list', r?.ingredients || [''], 'ingredient', 'e.g. 3 lbs wildflower honey');
+    buildList('steps-list', r?.steps || [''], 'step', 'e.g. Sanitize all equipment');
+    document.getElementById('form-modal').classList.add('open');
+  };
+
+  window.saveRecipe = async function() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('Recipe name is required', 'error'); return; }
+    const data = {
+      name,
+      description: document.getElementById('f-desc').value.trim(),
+      batch:       document.getElementById('f-batch').value.trim(),
+      abv:         document.getElementById('f-abv').value.trim(),
+      og:          document.getElementById('f-og').value.trim(),
+      fg:          document.getElementById('f-fg').value.trim(),
+      timeline:    document.getElementById('f-timeline').value.trim(),
+      yeast:       document.getElementById('f-yeast').value.trim(),
+      notes:       document.getElementById('f-notes').value.trim(),
+      ingredients: getListValues('ingredients-list'),
+      steps:       getListValues('steps-list'),
+      updatedAt:   new Date().toISOString(),
+    };
+    try {
+      if (editingId) {
+        await updateDoc(doc(db, COL, editingId), data);
+        showToast('Recipe updated');
+      } else {
+        data.createdAt = new Date().toISOString();
+        await addDoc(collection(db, COL), data);
+        showToast('Recipe saved');
+      }
+      closeModal('form-modal');
+      await loadRecipes();
+    } catch(e) {
+      showToast('Save failed — check Firebase config', 'error');
+    }
+  };
+
+  window.deleteRecipe = async function() {
+    if (!editingId || !confirm('Permanently delete this recipe?')) return;
+    try {
+      await deleteDoc(doc(db, COL, editingId));
+      showToast('Recipe deleted');
+      closeModal('form-modal');
+      await loadRecipes();
+    } catch(e) {
+      showToast('Delete failed', 'error');
+    }
+  };
+
+  function buildList(containerId, values, type, placeholder) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    (values.length ? values : ['']).forEach(v => addListItem(containerId, type, placeholder, v));
+  }
+
+  window.addListItem = function(containerId, type, placeholder, value='') {
+    const container = document.getElementById(containerId);
+    const isStep    = type === 'step';
+    const div       = document.createElement('div');
+    div.className   = 'dynamic-item';
+    div.innerHTML = `
+      ${isStep ? `<span class="item-num">${container.children.length+1}.</span>` : ''}
+      <input type="text" data-type="${type}" placeholder="${placeholder}" value="${esc(value)}"/>
+      <button class="remove-item" onclick="this.closest('.dynamic-item').remove();renumberItems('${containerId}','${type}')" title="Remove">−</button>`;
+    container.appendChild(div);
+  };
+
+  window.renumberItems = function(containerId, type) {
+    if (type !== 'step') return;
+    document.querySelectorAll(`#${containerId} .item-num`).forEach((el,i) => el.textContent = `${i+1}.`);
+  };
+
+  function getListValues(containerId) {
+    return [...document.getElementById(containerId).querySelectorAll('input')]
+      .map(i => i.value.trim()).filter(Boolean);
+  }
+
+  window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); };
+
+  document.querySelectorAll('.overlay').forEach(el =>
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
+  );
+
+  loadRecipes();
+</script>
+
+</body>
+</html>
