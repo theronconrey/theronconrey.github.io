@@ -1,3 +1,6 @@
+Mead recipes · HTML
+Copy
+
 ---
 layout: default
 title: Mead Recipes
@@ -594,7 +597,11 @@ title: Mead Recipes
       }
       callback();
     } catch(e) {
-      if (e.code !== 'auth/popup-closed-by-user') toast('Sign-in failed', 'error');
+      if (e.code !== 'auth/popup-closed-by-user') {
+        toast('Sign-in failed', 'error');
+        document.getElementById('mead-uid-debug').textContent = 'Error: ' + e.code + ' — ' + e.message;
+        document.getElementById('mead-uid-debug').style.display = 'block';
+      }
     }
   };
 
