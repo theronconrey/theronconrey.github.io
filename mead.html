@@ -585,7 +585,8 @@ title: Mead Recipes
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      document.getElementById('mead-uid-debug').textContent = 'Your UID: ' + user.uid;
+      document.getElementById('mead-uid-debug').textContent = 'UID returned by Google: ' + user.uid;
+      document.getElementById('mead-uid-debug').style.display = 'block';
       if (!isAllowed(user)) {
         await signOut(auth);
         toast('Access denied — not an authorised account', 'error');
