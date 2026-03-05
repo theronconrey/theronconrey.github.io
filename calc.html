@@ -1,0 +1,298 @@
+---
+layout: default
+title: Gravity Calculator
+---
+
+<style>
+  .calc {
+    --amber:    #c47c1a;
+    --amber-lt: #f0a832;
+    --amber-bg: rgba(196,124,26,0.12);
+    --amber-bdr:rgba(196,124,26,0.3);
+    --border:   #2a2a2a;
+    --text:     #fff;
+    --text2:    #aaa;
+    --text3:    #666;
+    --red:      #e05a4a;
+    --green:    #4caf7d;
+    --radius:   10px;
+    --radius-sm:6px;
+    font-family: inherit;
+    color: var(--text);
+  }
+
+  .calc-hero {
+    padding: 2.5rem 0 1.5rem;
+    border-bottom: 1px solid #222;
+    margin-bottom: 2rem;
+  }
+  .calc-hero h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .calc-hero h1 em { font-style: italic; color: var(--amber-lt); }
+  .calc-hero p { color: var(--text2); margin-top: 0.4rem; font-size: 0.95rem; }
+
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    color: var(--text3); font-size: 0.85rem; text-decoration: none;
+    margin-bottom: 1.5rem; transition: color 0.15s;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .calc-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .calc-card-header {
+    background: linear-gradient(135deg, rgba(196,124,26,0.15), rgba(196,124,26,0.05));
+    border-bottom: 1px solid var(--amber-bdr);
+    padding: 1.1rem 1.4rem;
+  }
+  .calc-card-header h2 {
+    font-size: 1rem; font-weight: 600; color: #fff;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .calc-card-header p {
+    font-size: 0.8rem; color: var(--text2);
+    font-style: italic; margin-top: 0.25rem;
+  }
+  .calc-card-body { padding: 1.4rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  .calc-field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .calc-label {
+    font-size: 0.72rem; font-weight: 600;
+    color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .calc-input-wrap { position: relative; }
+  .calc-input-wrap input {
+    width: 100%;
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.6rem 3rem 0.6rem 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+  .calc-input-wrap input:focus { border-color: var(--amber); }
+  .calc-input-wrap input::placeholder { color: #444; }
+  .calc-input-unit {
+    position: absolute; right: 0.85rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.78rem; color: var(--text3);
+    pointer-events: none;
+  }
+
+  .calc-hint {
+    font-size: 0.75rem; color: var(--text3);
+    font-style: italic;
+  }
+
+  .calc-result {
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; min-height: 58px;
+    transition: border-color 0.2s;
+  }
+  .calc-result.has-value { border-color: var(--amber-bdr); }
+  .calc-result-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+  .calc-result-value {
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--amber-lt); line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-result-value.empty { color: #333; font-size: 1rem; font-weight: 400; }
+  .calc-result-sub { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+
+  /* Range indicator */
+  .calc-range {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem;
+  }
+  .calc-range-chip {
+    font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 99px;
+    border: 1px solid #2a2a2a; color: var(--text3); background: #0d0d0d;
+  }
+  .calc-range-chip.active {
+    border-color: var(--amber-bdr);
+    color: var(--amber-lt);
+    background: var(--amber-bg);
+  }
+</style>
+
+<div class="calc">
+
+
+  <div class="calc-hero">
+    <h1>Gravity <em>calculator.</em></h1>
+    <p>Figure out what you made — or what you're about to make.</p>
+  </div>
+
+  <div class="calc-grid">
+
+    <!-- ABV from OG & FG -->
+    <div class="calc-card">
+      <div class="calc-card-header">
+        <h2>🧪 ABV from OG &amp; FG</h2>
+        <p>Actual ABV after fermentation is complete</p>
+      </div>
+      <div class="calc-card-body">
+        <div class="calc-field">
+          <label class="calc-label">Original Gravity (OG)</label>
+          <div class="calc-input-wrap">
+            <input type="number" id="abv-og" placeholder="1.110" step="0.001" min="1.000" max="1.200" oninput="calcABV()"/>
+            <span class="calc-input-unit">SG</span>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Final Gravity (FG)</label>
+          <div class="calc-input-wrap">
+            <input type="number" id="abv-fg" placeholder="1.010" step="0.001" min="0.990" max="1.200" oninput="calcABV()"/>
+            <span class="calc-input-unit">SG</span>
+          </div>
+        </div>
+        <div class="calc-result" id="abv-result">
+          <div>
+            <div class="calc-result-label">Estimated ABV</div>
+            <div class="calc-result-sub" id="abv-attenuation"></div>
+          </div>
+          <div class="calc-result-value empty" id="abv-value">—</div>
+        </div>
+        <div class="calc-range" id="abv-range"></div>
+      </div>
+      <div class="calc-formula-note">
+        Formula: <code>(OG − FG) × 131.25</code> — standard simple ABV formula
+      </div>
+    </div>
+
+    <!-- Potential ABV from OG -->
+    <div class="calc-card">
+      <div class="calc-card-header">
+        <h2>🍯 Potential ABV from OG</h2>
+        <p>Maximum possible ABV if fully fermented out</p>
+      </div>
+      <div class="calc-card-body">
+        <div class="calc-field">
+          <label class="calc-label">Original Gravity (OG)</label>
+          <div class="calc-input-wrap">
+            <input type="number" id="pot-og" placeholder="1.110" step="0.001" min="1.000" max="1.200" oninput="calcPotential()"/>
+            <span class="calc-input-unit">SG</span>
+          </div>
+          <span class="calc-hint">Assumes full attenuation to 1.000</span>
+        </div>
+        <div class="calc-result" id="pot-result">
+          <div>
+            <div class="calc-result-label">Potential ABV</div>
+            <div class="calc-result-sub" id="pot-sub"></div>
+          </div>
+          <div class="calc-result-value empty" id="pot-value">—</div>
+        </div>
+        <div class="calc-range" id="pot-range"></div>
+      </div>
+      <div class="calc-formula-note">
+        Formula: <code>(OG − 1.000) × 131.25</code>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const meadStyles = [
+    { max: 1.055, label: 'Session / Hydromel' },
+    { max: 1.090, label: 'Standard Mead' },
+    { max: 1.120, label: 'Traditional / Sack' },
+    { max: 1.150, label: 'Sack Mead' },
+    { max: 9.999, label: 'Big / Dessert Mead' },
+  ];
+
+  function getStyle(og) {
+    return meadStyles.find(s => og <= s.max)?.label || '';
+  }
+
+  function abvCategory(abv) {
+    if (abv < 5)  return 'Session';
+    if (abv < 8)  return 'Light';
+    if (abv < 12) return 'Standard';
+    if (abv < 16) return 'Strong';
+    if (abv < 20) return 'Sack';
+    return 'Big Mead';
+  }
+
+  function setResult(valueEl, resultEl, value, suffix) {
+    if (value === null) {
+      valueEl.textContent = '—';
+      valueEl.classList.add('empty');
+      resultEl.classList.remove('has-value');
+    } else {
+      valueEl.textContent = value.toFixed(2) + suffix;
+      valueEl.classList.remove('empty');
+      resultEl.classList.add('has-value');
+    }
+  }
+
+  function renderRange(containerId, abv, og) {
+    const el = document.getElementById(containerId);
+    if (abv === null) { el.innerHTML = ''; return; }
+    const style = getStyle(og);
+    const cat   = abvCategory(abv);
+    el.innerHTML = `
+      <span class="calc-range-chip active">${style}</span>
+      <span class="calc-range-chip active">${cat}</span>`;
+  }
+
+  window.calcABV = function() {
+    const og  = parseFloat(document.getElementById('abv-og').value);
+    const fg  = parseFloat(document.getElementById('abv-fg').value);
+    const val = document.getElementById('abv-value');
+    const res = document.getElementById('abv-result');
+    const att = document.getElementById('abv-attenuation');
+
+    if (isNaN(og) || isNaN(fg) || og <= fg) {
+      setResult(val, res, null, '');
+      att.textContent = '';
+      renderRange('abv-range', null, og);
+      return;
+    }
+    const abv        = (og - fg) * 131.25;
+    const attenuation = ((og - fg) / (og - 1)) * 100;
+    setResult(val, res, abv, '%');
+    att.textContent  = `${attenuation.toFixed(1)}% attenuation`;
+    renderRange('abv-range', abv, og);
+  };
+
+  window.calcPotential = function() {
+    const og  = parseFloat(document.getElementById('pot-og').value);
+    const val = document.getElementById('pot-value');
+    const res = document.getElementById('pot-result');
+    const sub = document.getElementById('pot-sub');
+
+    if (isNaN(og) || og <= 1.000) {
+      setResult(val, res, null, '');
+      sub.textContent = '';
+      renderRange('pot-range', null, og);
+      return;
+    }
+    const abv = (og - 1.000) * 131.25;
+    setResult(val, res, abv, '%');
+    sub.textContent = `at full attenuation`;
+    renderRange('pot-range', abv, og);
+  };
+</script>
