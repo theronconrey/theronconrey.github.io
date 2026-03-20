@@ -1,108 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Page title: "Post Title | Site Title" or just "Site Title" on the home page -->
   <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  <link type="application/atom+xml" rel="alternate" href="{{ '/feed.xml' | relative_url }}" title="{{ site.title }}">
-  <style>
-    body, html { background-color: #000 !important; color: #fff !important; }
-    .site-header, .site-footer, .page-content { background-color: #000 !important; border-color: #333 !important; }
-    a { color: #ccc !important; }
-    a:hover { color: #fff !important; }
-    .site-title, .site-title:visited { color: #fff !important; }
-    .post-link { color: #fff !important; }
-    .post-meta { color: #aaa !important; }
-    .site-footer { color: #888 !important; }
-    code { background: #1a1a1a !important; color: #f8f8f2 !important; }
-    pre { background: #1a1a1a !important; padding: 1rem; border-radius: 4px; overflow-x: auto; }
-    blockquote { border-left: 3px solid #444 !important; color: #aaa !important; }
 
-    .top-nav {
-      background-color: #111;
-      border-bottom: 1px solid #333;
-      padding: 0 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 48px;
-    }
-    .top-nav .nav-left { flex: 1; }
-    .top-nav .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-    .top-nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; align-items: center; }
-    .top-nav ul a { color: #ccc !important; text-decoration: none; font-size: 0.95rem; }
-    .top-nav ul a:hover { color: #fff !important; }
-    .nav-rss a { display: flex; align-items: center; text-decoration: none; }
-    .nav-rss svg { width: 22px; height: 22px; fill: #f26522; }
-    .nav-rss a:hover svg { fill: #ff8c42; }
-
-    .search-wrap { margin: 2rem 0 1rem; }
-    #search-input {
-      width: 100%; padding: 0.5rem 0.75rem;
-      background: #111; border: 1px solid #444;
-      color: #fff; font-size: 1rem; border-radius: 4px; box-sizing: border-box;
-    }
-    #search-input::placeholder { color: #666; }
-    #search-input:focus { outline: none; border-color: #888; }
-    #no-results { color: #888; font-style: italic; }
-
-    .site-footer .wrapper {
-      padding-left: 1.5rem !important;
-      padding-right: 1.5rem !important;
-    }
-  </style>
+  <!-- RSS / Atom feed discovery -->
+  <link type="application/atom+xml" rel="alternate"
+        href="{{ '/feed.xml' | relative_url }}"
+        title="{{ site.title }}">
 </head>
+
 <body>
 
+  <!-- ============================================================
+       Top navigation bar
+       Left: site brand label
+       Right: page links + social icons (Mastodon, RSS)
+       ============================================================ -->
   <nav class="top-nav">
-    <span class="nav-left" style="color: #aaa; font-size: 0.95rem; letter-spacing: 0.05em;">48&deg; N</span>
-    <div class="nav-right">
-    <ul>
-      <li><a href="{{ '/' | relative_url }}">Home</a></li>
-      <li><a href="{{ '/posts' | relative_url }}">Posts</a></li>
-      <li><a href="{{ '/about' | relative_url }}">About</a></li>
-      <li><a href="{{ '/ferment.html' | relative_url }}">Ferment</a></li>
-      <li><a href="{{ '/calc.html' | relative_url }}">Calc</a></li>
-    </ul>
-    <div style="display:flex; align-items:center; gap:0.75rem;">
-    <div class="nav-mastodon">
-      <a href="https://hachyderm.io/@theronconrey" target="_blank" rel="noopener" title="Mastodon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 79" style="width:22px;height:22px;fill:#6364ff;"><path d="M73.7 17.4C72.7 10.1 66.5 4.3 58.9 3c-1.2-.2-5.4-.8-15.5-.8h-.1c-10.1 0-12.3.6-13.5.8C22.3 4.3 15.8 9.7 14.3 17c-.7 3.6-.8 7.5-.5 11.1.4 5.6 1.5 11.1 4.5 16 3.8 6.1 9.6 9.9 16.3 11.1 6.8 1.2 13.9.7 20.3-1.6.6-.2 1.2-.5 1.8-.8.1 0 .2-.1.2-.1v-5.7s-.1 0-.2.1c-1.6.6-3.2 1.1-4.9 1.4-4.2.7-8.6.5-12.6-.9-5.7-2-6.5-7.5-6.6-8.6v-.3c2.2.5 4.4.9 6.6 1 2.3.1 4.6.2 6.9.1 4.4-.2 8.9-.7 13.1-2 .1 0 .2-.1.3-.1 6-1.8 11.7-6.8 12.3-15.2.1-.9.3-3 .3-3.9 0-.3.1-3.3 0-5.2zM61.4 37h-9.1V20.9c0-4.2-1.8-6.3-5.3-6.3-3.9 0-5.9 2.5-5.9 7.5v10.9h-9V22.1c0-5-2-7.5-5.9-7.5-3.5 0-5.3 2.1-5.3 6.3V37h-9.1v-16.6c0-4.2 1.1-7.5 3.2-10 2.2-2.5 5.1-3.7 8.7-3.7 4.2 0 7.3 1.6 9.4 4.8l2 3.4 2-3.4c2.1-3.2 5.2-4.8 9.4-4.8 3.6 0 6.5 1.3 8.7 3.7 2.1 2.5 3.2 5.8 3.2 10V37z"/></svg>
-      </a>
-    </div>
-    <div class="nav-rss">
-      <a href="{{ '/feed.xml' | relative_url }}" title="RSS Feed">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20 C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
-        </svg>
-      </a>
-    </div>
-    </div>
-    </div>
-  </nav>
 
+    <span class="nav-brand">48&deg; N</span>
+
+    <div class="nav-right">
+
+      <!-- Page links -->
+      <ul class="nav-links">
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/posts' | relative_url }}">Posts</a></li>
+        <li><a href="{{ '/about' | relative_url }}">About</a></li>
+        <li><a href="{{ '/ferment.html' | relative_url }}">Ferment</a></li>
+        <li><a href="{{ '/calc.html' | relative_url }}">Calc</a></li>
+      </ul>
+
+      <!-- Social icons -->
+      <div class="nav-social">
+
+        <!-- Mastodon: @theronconrey@hachyderm.io -->
+        <div class="nav-mastodon">
+          <a href="https://hachyderm.io/@theronconrey" target="_blank" rel="noopener" title="Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 79">
+              <path d="M73.7 17.4C72.7 10.1 66.5 4.3 58.9 3c-1.2-.2-5.4-.8-15.5-.8h-.1c-10.1 0-12.3.6-13.5.8C22.3 4.3 15.8 9.7 14.3 17c-.7 3.6-.8 7.5-.5 11.1.4 5.6 1.5 11.1 4.5 16 3.8 6.1 9.6 9.9 16.3 11.1 6.8 1.2 13.9.7 20.3-1.6.6-.2 1.2-.5 1.8-.8.1 0 .2-.1.2-.1v-5.7s-.1 0-.2.1c-1.6.6-3.2 1.1-4.9 1.4-4.2.7-8.6.5-12.6-.9-5.7-2-6.5-7.5-6.6-8.6v-.3c2.2.5 4.4.9 6.6 1 2.3.1 4.6.2 6.9.1 4.4-.2 8.9-.7 13.1-2 .1 0 .2-.1.3-.1 6-1.8 11.7-6.8 12.3-15.2.1-.9.3-3 .3-3.9 0-.3.1-3.3 0-5.2zM61.4 37h-9.1V20.9c0-4.2-1.8-6.3-5.3-6.3-3.9 0-5.9 2.5-5.9 7.5v10.9h-9V22.1c0-5-2-7.5-5.9-7.5-3.5 0-5.3 2.1-5.3 6.3V37h-9.1v-16.6c0-4.2 1.1-7.5 3.2-10 2.2-2.5 5.1-3.7 8.7-3.7 4.2 0 7.3 1.6 9.4 4.8l2 3.4 2-3.4c2.1-3.2 5.2-4.8 9.4-4.8 3.6 0 6.5 1.3 8.7 3.7 2.1 2.5 3.2 5.8 3.2 10V37z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- RSS feed -->
+        <div class="nav-rss">
+          <a href="{{ '/feed.xml' | relative_url }}" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20
+                       C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56
+                       15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9
+                       9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+            </svg>
+          </a>
+        </div>
+
+      </div><!-- /.nav-social -->
+
+    </div><!-- /.nav-right -->
+
+  </nav><!-- /.top-nav -->
+
+
+  <!-- ============================================================
+       Main page content
+       ============================================================ -->
   <main class="page-content" aria-label="Content">
     <div class="wrapper">
       {{ content }}
     </div>
   </main>
 
+
+  <!-- ============================================================
+       Footer
+       Left: copyright
+       Right: LinkedIn / resume link
+       Center below: "built with" attribution
+       ============================================================ -->
   <footer class="site-footer">
-    <div class="wrapper" style="padding: 1.5rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-        <span style="color: #888;">&#169; 2026 Forty Eight Degrees</span>
-        <a href="https://www.linkedin.com/in/theronconrey" target="_blank" rel="noopener" style="color: #888; text-decoration: none; font-size: 0.95rem;">Resume</a>
+    <div class="wrapper">
+
+      <div class="footer-inner">
+        <span class="footer-copyright">&#169; 2026 Forty Eight Degrees</span>
+        <a href="https://www.linkedin.com/in/theronconrey"
+           target="_blank" rel="noopener"
+           class="footer-resume">Resume</a>
       </div>
-      <div style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
-        <span style="color: #555; font-size: 0.8rem;">A</span>
-        <a href="https://claude.ai" target="_blank" rel="noopener" title="Claude" style="display: flex; align-items: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:18px;height:18px;fill:#cc785c;"><path d="M12 1.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 12 1.5zm0 16.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 12 18zM4.22 4.22a.75.75 0 0 1 1.06 0l2.12 2.12a.75.75 0 0 1-1.06 1.06L4.22 5.28a.75.75 0 0 1 0-1.06zm12.32 12.32a.75.75 0 0 1 1.06 0l2.12 2.12a.75.75 0 0 1-1.06 1.06l-2.12-2.12a.75.75 0 0 1 0-1.06zM1.5 12a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3A.75.75 0 0 1 1.5 12zm16.5 0a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1-.75-.75zM4.22 19.78a.75.75 0 0 1 0-1.06l2.12-2.12a.75.75 0 0 1 1.06 1.06l-2.12 2.12a.75.75 0 0 1-1.06 0zm12.32-12.32a.75.75 0 0 1 0-1.06l2.12-2.12a.75.75 0 0 1 1.06 1.06l-2.12 2.12a.75.75 0 0 1-1.06 0z"/></svg>
-        </a>
-        <span style="color: #555; font-size: 0.8rem;">Generated <a href="https://jekyllrb.com" target="_blank" rel="noopener" style="color: #555;">Jekyll</a> theme</span>
-      </div>
-    </div>
-  </footer>
+
+      <!-- Attribution: AI-assisted, built with Jekyll -->
+      <div class="footer-attribution">
+        <span class="footer-attr-label">A</span>
+
+        <!-- Claude icon -->
+        <div class="footer-claude">
+          <a href="https://claude.ai" target="_blank" rel="noopener" title="Claude">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 1.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 12
+                       1.5zm0 16.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1
+                       12 18zM4.22 4.22a.75.75 0 0 1 1.06 0l2.12 2.12a.75.75 0 0 1-1.06
+                       1.06L4.22 5.28a.75.75 0 0 1 0-1.06zm12.32 12.32a.75.75 0 0 1 1.06
+                       0l2.12 2.12a.75.75 0 0 1-1.06 1.06l-2.12-2.12a.75.75 0 0 1
+                       0-1.06zM1.5 12a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3A.75.75
+                       0 0 1 1.5 12zm16.5 0a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3a.75.75
+                       0 0 1-.75-.75zM4.22 19.78a.75.75 0 0 1 0-1.06l2.12-2.12a.75.75 0 0 1
+                       1.06 1.06l-2.12 2.12a.75.75 0 0 1-1.06 0zm12.32-12.32a.75.75 0 0 1
+                       0-1.06l2.12-2.12a.75.75 0 0 1 1.06 1.06l-2.12 2.12a.75.75 0 0 1-1.06 0z"/>
+            </svg>
+          </a>
+        </div>
+
+        <span class="footer-attr-label">
+          Generated <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> theme
+        </span>
+      </div><!-- /.footer-attribution -->
+
+    </div><!-- /.wrapper -->
+  </footer><!-- /.site-footer -->
 
 </body>
 </html>

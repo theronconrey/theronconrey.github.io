@@ -4,31 +4,48 @@ layout: default
 
 <div class="home">
 
-  <div id="profile-section" style="text-align: center; padding: 3rem 1rem 2rem; display: none;">
-    <img id="profile-avatar" src="" alt="Profile photo"
-         style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #333; margin-bottom: 1rem;" />
-    <h1 id="profile-name" style="margin: 0.5rem 0 0.25rem; font-size: 1.6rem; color: #fff;"></h1>
-    <p id="profile-bio" style="color: #ccc; max-width: 500px; margin: 0 auto 1rem; line-height: 1.6;"></p>
+  <!-- ============================================================
+       Profile card
+       Populated by the Mastodon API fetch below.
+       Hidden by default; shown via JavaScript once data loads.
+       ============================================================ -->
+  <div id="profile-section" class="profile-section">
+    <img id="profile-avatar" src="" alt="Profile photo" class="profile-avatar" />
+    <h1 id="profile-name" class="profile-name"></h1>
+    <p id="profile-bio" class="profile-bio"></p>
   </div>
 
-  <div id="profile-error" style="display: none; text-align: center; padding: 2rem; color: #666;">
+  <!-- Shown if the Mastodon API call fails -->
+  <div id="profile-error" class="profile-error">
     <p>Could not load profile.</p>
   </div>
 
+
+  <!-- ============================================================
+       Recent posts list
+       ============================================================ -->
   {% if site.posts.size > 0 %}
-    <h2 style="color: #aaa; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 2rem 0 0.75rem;">Recent Posts</h2>
-    <ul style="list-style: none; margin: 0; padding: 0;">
+    <h2 class="posts-heading">Recent Posts</h2>
+
+    <ul class="post-list-clean">
       {% for post in site.posts limit:5 %}
-        <li style="display: flex; align-items: baseline; gap: 1rem; padding: 0.4rem 0;">
-          <span style="font-size: 1rem; font-weight: bold; color: #aaa; white-space: nowrap;">{{ post.date | date: "%b %-d, %Y" }}</span>
-          <a href="{{ post.url | relative_url }}" style="font-size: 1rem; font-weight: normal; color: #fff; text-decoration: none;">{{ post.title | escape }}</a>
+        <li class="post-list-item">
+          <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <a href="{{ post.url | relative_url }}" class="post-title-link">{{ post.title | escape }}</a>
         </li>
       {% endfor %}
     </ul>
   {% endif %}
 
-</div>
+</div><!-- /.home -->
 
+
+<!-- ============================================================
+     Mastodon profile fetch
+     Pulls display name, avatar, and bio from the Mastodon API
+     and injects them into the profile card above.
+     Falls back to showing the error div if anything goes wrong.
+     ============================================================ -->
 <script>
   (async function () {
     const instance = 'hachyderm.io';
@@ -40,15 +57,20 @@ layout: default
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
 
+      // Populate profile card fields
       document.getElementById('profile-avatar').src = data.avatar || '';
       document.getElementById('profile-name').textContent = data.display_name || username;
 
+      // Strip HTML tags from the bio (Mastodon returns HTML)
       const tmp = document.createElement('div');
       tmp.innerHTML = data.note || '';
       document.getElementById('profile-bio').textContent = tmp.textContent || tmp.innerText || '';
 
+      // Reveal the card
       document.getElementById('profile-section').style.display = 'block';
+
     } catch (e) {
+      // API unavailable or returned an error — show fallback message
       document.getElementById('profile-error').style.display = 'block';
     }
   })();

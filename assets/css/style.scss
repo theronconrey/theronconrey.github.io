@@ -3,7 +3,32 @@
 
 @import "minima";
 
-// ── Dark theme ──────────────────────────────────────────────
+/*
+ * Forty Eight Degrees — Custom stylesheet
+ * Extends the Minima theme with a dark color scheme.
+ *
+ * Color reference:
+ *   #000       background (primary)
+ *   #111       background (elevated, e.g. nav)
+ *   #1a1a1a    background (code blocks)
+ *   #333       borders (strong)
+ *   #444       borders (subtle), blockquote accent
+ *   #555       muted text (attribution)
+ *   #666       placeholder text
+ *   #888       footer text, secondary labels
+ *   #999       visited links
+ *   #aaa       post meta, nav brand, post dates
+ *   #ccc       body links, nav links
+ *   #fff       primary text, headings, hover states
+ *   #f26522    RSS icon
+ *   #6364ff    Mastodon icon
+ *   #cc785c    Claude icon (attribution)
+ */
+
+
+/* ── Base ───────────────────────────────────────────────────── */
+
+html,
 body {
   background-color: #000;
   color: #fff;
@@ -12,31 +37,46 @@ body {
 a {
   color: #ccc;
   &:visited { color: #999; }
-  &:hover { color: #fff; }
+  &:hover   { color: #fff; }
 }
+
+
+/* ── Site chrome ────────────────────────────────────────────── */
 
 .site-header {
   background-color: #000;
   border-bottom: 1px solid #333;
 }
 
+/* Hide the default Minima header — we use .top-nav instead */
+.site-header .wrapper {
+  display: none;
+}
+
+.site-title,
+.site-title:visited {
+  color: #fff;
+}
+
+.page-content {
+  background-color: #000;
+}
+
 .site-footer {
   background-color: #000;
   border-top: 1px solid #333;
   color: #888;
+
+  /* Override Minima's default footer padding */
+  .wrapper {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
-.post-list li,
-.post-meta {
-  color: #aaa;
-}
 
-.post-link {
-  color: #fff !important;
-  &:hover { color: #ccc !important; }
-}
+/* ── Top navigation bar ─────────────────────────────────────── */
 
-// ── Nav bar ─────────────────────────────────────────────────
 .top-nav {
   background-color: #111;
   border-bottom: 1px solid #333;
@@ -46,12 +86,28 @@ a {
   justify-content: space-between;
   height: 48px;
 
+  /* Site name / brand label on the left */
+  .nav-brand {
+    color: #aaa;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Right-side group: nav links + social icons */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Page links */
   .nav-links {
     display: flex;
     gap: 1.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
+    align-items: center;
 
     a {
       color: #ccc;
@@ -62,40 +118,57 @@ a {
     }
   }
 
+  /* Social icon cluster */
+  .nav-social {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Mastodon icon */
+  .nav-mastodon svg {
+    width: 22px;
+    height: 22px;
+    fill: #6364ff;
+  }
+
+  /* RSS icon */
   .nav-rss a {
     display: flex;
     align-items: center;
-    color: #f26522;
     text-decoration: none;
-    &:hover { opacity: 0.8; }
+  }
 
-    svg {
-      width: 20px;
-      height: 20px;
-      fill: #f26522;
-    }
+  .nav-rss svg {
+    width: 22px;
+    height: 22px;
+    fill: #f26522;
+    &:hover { fill: #ff8c42; }
   }
 }
 
-// ── Search ──────────────────────────────────────────────────
+
+/* ── Search box ─────────────────────────────────────────────── */
+
 .search-wrap {
   margin: 2rem 0 1rem;
+}
 
-  #search-input {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    background: #111;
-    border: 1px solid #444;
-    color: #fff;
-    font-size: 1rem;
-    border-radius: 4px;
-    box-sizing: border-box;
+#search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: #111;
+  border: 1px solid #444;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
 
-    &::placeholder { color: #666; }
-    &:focus {
-      outline: none;
-      border-color: #888;
-    }
+  &::placeholder { color: #666; }
+
+  &:focus {
+    outline: none;
+    border-color: #888;
   }
 }
 
@@ -104,22 +177,161 @@ a {
   font-style: italic;
 }
 
-// ── Post content ────────────────────────────────────────────
+
+/* ── Post list (home page) ──────────────────────────────────── */
+
+.posts-heading {
+  color: #aaa;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list-clean {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.4rem 0;
+}
+
+.post-date {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.post-title-link {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #fff;
+  text-decoration: none;
+}
+
+.post-meta { color: #aaa; }
+
+.post-link {
+  color: #fff;
+  &:hover { color: #ccc; }
+}
+
+
+/* ── Profile card (home page, loaded from Mastodon API) ─────── */
+
+.profile-section {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
+
+  /* Shown via JavaScript once data loads; hidden by default */
+  display: none;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #333;
+  margin-bottom: 1rem;
+}
+
+.profile-name {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.profile-bio {
+  color: #ccc;
+  max-width: 500px;
+  margin: 0 auto 1rem;
+  line-height: 1.6;
+}
+
+.profile-error {
+  /* Shown via JavaScript if the Mastodon API call fails */
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+
+/* ── Footer ─────────────────────────────────────────────────── */
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer-copyright {
+  color: #888;
+}
+
+.footer-resume {
+  color: #888;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+/* "Built with" attribution row */
+.footer-attribution {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.footer-attr-label {
+  color: #555;
+  font-size: 0.8rem;
+
+  a {
+    color: #555;
+    &:hover { color: #888; }
+  }
+}
+
+/* Claude icon in attribution */
+.footer-claude svg {
+  width: 18px;
+  height: 18px;
+  fill: #cc785c;
+}
+
+
+/* ── Post content ────────────────────────────────────────────── */
+
 .post-content,
 .post-body {
+
   h1, h2, h3, h4 { color: #fff; }
+
   code {
     background: #1a1a1a;
     color: #f8f8f2;
     padding: 0.1em 0.3em;
     border-radius: 3px;
   }
+
   pre {
     background: #1a1a1a;
     padding: 1rem;
     border-radius: 4px;
     overflow-x: auto;
   }
+
   blockquote {
     border-left: 3px solid #444;
     color: #aaa;
