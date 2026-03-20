@@ -266,31 +266,27 @@ a {
 
 /* ── Footer ─────────────────────────────────────────────────── */
 
+/* Single row: copyright (left) | attribution (center) | resume (right) */
 .footer-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 1rem 0;
 }
 
 .footer-copyright {
   color: #888;
+  font-size: 0.9rem;
+  flex: 1;
 }
 
-.footer-resume {
-  color: #888;
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-
-/* "Built with" attribution row */
+/* Center attribution: "A [Claude icon] Generated Jekyll theme" */
 .footer-attribution {
-  margin-top: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
+  flex: 1;
 }
 
 .footer-attr-label {
@@ -308,6 +304,14 @@ a {
   width: 18px;
   height: 18px;
   fill: #cc785c;
+}
+
+.footer-resume {
+  color: #888;
+  text-decoration: none;
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: right;
 }
 
 
