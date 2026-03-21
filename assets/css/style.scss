@@ -341,34 +341,42 @@ a {
  * Minima's default table styles use light backgrounds and borders.
  * These overrides bring tables in line with the dark theme.
  */
+/*
+ * Minima uses "table th" and "table td" selectors (specificity 0,1,1).
+ * Plain "th" and "td" (0,0,1) lose that fight, so we match Minima's
+ * selector pattern to ensure our dark styles win by source order.
+ */
 table {
   width: 100%;
   border-collapse: collapse;
+  border: none;
   margin: 1rem 0;
   font-size: 0.9rem;
   color: #ccc;
 }
 
-th {
+table th {
   background-color: #1a1a1a;
   color: #fff;
   font-weight: 600;
   text-align: left;
   padding: 0.6rem 0.9rem;
+  border: none;
   border-bottom: 2px solid #333;
 }
 
-td {
+table td {
   padding: 0.55rem 0.9rem;
+  border: none;
   border-bottom: 1px solid #222;
 }
 
 /* Alternate row shading for readability */
-tr:nth-child(even) td {
+table tr:nth-child(even) td {
   background-color: #111;
 }
 
-tr:hover td {
+table tr:hover td {
   background-color: #161616;
 }
 
