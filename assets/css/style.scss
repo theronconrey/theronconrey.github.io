@@ -378,9 +378,12 @@ div.highlighter-rouge {
   margin: 1rem 0;
 }
 
-/* Inner highlight div and pre */
-div.highlight,
-pre.highlight {
+/*
+ * Use .highlighter-rouge .highlight to match Minima's specificity (0,2,0).
+ * Minima compiles ".highlighter-rouge .highlight { background: #eef }" which
+ * beats "div.highlight" (0,1,1). Matching the selector wins cleanly.
+ */
+.highlighter-rouge .highlight {
   background: #1a1a1a;
   color: #f8f8f2;
   margin: 0;
@@ -390,8 +393,7 @@ pre.highlight {
 }
 
 /* Code inside blocks */
-div.highlight code,
-pre.highlight code {
+.highlighter-rouge .highlight code {
   background: transparent;
   color: #f8f8f2;
   padding: 0;
