@@ -343,22 +343,68 @@ a {
 
   h1, h2, h3, h4 { color: #fff; }
 
-  code {
-    background: #1a1a1a;
-    color: #f8f8f2;
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
-  }
-
-  pre {
-    background: #1a1a1a;
-    padding: 1rem;
-    border-radius: 4px;
-    overflow-x: auto;
-  }
-
   blockquote {
     border-left: 3px solid #444;
     color: #aaa;
   }
 }
+
+
+/* ── Rouge syntax highlighting overrides ────────────────────── */
+/*
+ * Jekyll uses Rouge for syntax highlighting. Minima loads a light-theme
+ * Rouge stylesheet by default. These rules override every level of the
+ * Rouge wrapper hierarchy to enforce the dark theme.
+ *
+ * Rouge wraps fenced code blocks as:
+ *   div.highlighter-rouge > div.highlight > pre.highlight > code
+ *
+ * Inline code gets: code.language-plaintext.highlighter-rouge
+ */
+
+/* Inline code */
+code.highlighter-rouge {
+  background: #1a1a1a;
+  color: #f8f8f2;
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Fenced block outer container */
+div.highlighter-rouge {
+  background: #1a1a1a;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+/* Inner highlight div and pre */
+div.highlight,
+pre.highlight {
+  background: #1a1a1a;
+  color: #f8f8f2;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+/* Code inside blocks */
+div.highlight code,
+pre.highlight code {
+  background: transparent;
+  color: #f8f8f2;
+  padding: 0;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+/* Rouge token colors (bash highlighting) */
+.highlight .nb { color: #8be9fd; }   /* built-in commands */
+.highlight .nt { color: #50fa7b; }   /* flags / options */
+.highlight .o  { color: #ff79c6; }   /* operators */
+.highlight .s  { color: #f1fa8c; }   /* strings */
+.highlight .s2 { color: #f1fa8c; }   /* double-quoted strings */
+.highlight .nv { color: #8be9fd; }   /* variables */
+.highlight .c  { color: #6272a4; }   /* comments */
+.highlight .c1 { color: #6272a4; }   /* single-line comments */
