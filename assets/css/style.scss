@@ -266,17 +266,26 @@ a {
 
 /* ── Footer ─────────────────────────────────────────────────── */
 
-/* Single row: copyright (left) | attribution (center) | resume (right) */
-/* Override Minima's text-align: center on .site-footer */
+/*
+ * Minima's default footer uses text-align: center and doesn't constrain
+ * the wrapper width — both interfere with our three-column flex layout.
+ * These overrides establish the foundation everything else builds on.
+ */
 .site-footer {
   text-align: left;
 
   .wrapper {
     width: 100%;
     box-sizing: border-box;
+    padding: 0 1.5rem;
   }
 }
 
+/*
+ * Single flex row with three equal columns:
+ *   copyright (left) | attribution (center) | resume (right)
+ * Each child gets flex: 1 so they share space evenly.
+ */
 .footer-inner {
   display: flex;
   align-items: center;
@@ -286,19 +295,20 @@ a {
 }
 
 .footer-copyright {
+  flex: 1;
   color: #888;
   font-size: 0.9rem;
-  flex: 1;
 }
 
-/* Center attribution: "A [Claude icon] Generated Jekyll theme" */
 .footer-attribution {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  flex: 1;
-  line-height: 1;  /* prevent default div spacing from pushing it down */
+
+  /* Reset line-height so the div doesn't push below its siblings */
+  line-height: 1;
 }
 
 .footer-attr-label {
@@ -311,7 +321,6 @@ a {
   }
 }
 
-/* Claude icon in attribution */
 .footer-claude svg {
   width: 18px;
   height: 18px;
@@ -319,10 +328,10 @@ a {
 }
 
 .footer-resume {
+  flex: 1;
   color: #888;
   text-decoration: none;
   font-size: 0.9rem;
-  flex: 1;
   text-align: right;
 }
 
