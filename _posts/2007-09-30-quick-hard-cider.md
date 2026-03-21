@@ -14,9 +14,9 @@ During the last [IBU][ibu-site] meeting, one of the members, [Mike][mike-site], 
 
 ## Ingredients
 
-- 5 gallons apple cider — Cub Foods, Indian Summer, or similar. "The cheapest stuff you can find." Just make sure it has no added potassium sorbate.
+- 5 gallons apple cider: Cub Foods, Indian Summer, or similar. "The cheapest stuff you can find." Just make sure it has no added potassium sorbate.
 - 2 lbs light or dark brown sugar
-- Dry ale yeast — I used [Safale S-04][yeast-link], though Mike says it doesn't matter much
+- Dry ale yeast: I used [Safale S-04][yeast-link], though Mike says it doesn't matter much
 - 2½ tsp potassium sorbate (for secondary)
 - 2 vanilla beans, split, scraped, and chopped (for secondary)
 - 2 cans apple juice concentrate (for kegging)
@@ -25,7 +25,7 @@ During the last [IBU][ibu-site] meeting, one of the members, [Mike][mike-site], 
 
 1. Sanitize your fermenter
 2. Add brown sugar to the fermenter
-3. Pour apple cider over the sugar — this mixes and aerates in one step
+3. Pour apple cider over the sugar: this mixes and aerates in one step
 4. Pitch yeast
 5. Ferment until done, usually to 1.000 or slightly above
 
@@ -48,7 +48,7 @@ During the last [IBU][ibu-site] meeting, one of the members, [Mike][mike-site], 
 
 Adjusting the amount of concentrate affects final sweetness. Mike recommends at least six weeks from fermenter to glass, though four weeks works in a pinch.
 
-**A note on vanilla beans:** They can be hard to find locally and often expensive when you do. I had good luck ordering from the [Arizona Vanilla Company][bean-link] on eBay — good quality, reasonable prices.
+**A note on vanilla beans:** They can be hard to find locally and often expensive when you do. I had good luck ordering from the [Arizona Vanilla Company][bean-link] on eBay: good quality, reasonable prices.
 
 [ibu-site]: http://www.iowahomebrewers.org
 [mike-site]: http://www.mikeserve.com/homebrewing/homebrewing.htm
