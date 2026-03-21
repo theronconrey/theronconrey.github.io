@@ -1,242 +1,266 @@
 ---
-layout: post 
-title: "Converged Infrastructure hacking" 
+layout: post
+title: "Converged Infrastructure hacking"
 date: 2013-02-26
 ---
-I just wrapped up my presentation at the [Gluster Workshop at CERN][gluster-cern] where I discussed Open Source advantages in tackling converged infrastructure challenges.  Here is my [slidedeck]({{ site.url }}/assets/CI_presentation_26Feb2013.pdf).  Just a quick heads up, there's some animation that's lost in the pdf export as well as color commentary during almost every slide.
 
-During the presentation I demo'ed out the new QEMU/GlusterFS native integration leveraging libgfapi.  For those of you wondering what that means, in short, there's no need for FUSE anymore and QEMU leverages GlusterFS natively on the back end.  Awesome.
+I just wrapped up my presentation at the [Gluster Workshop at CERN][gluster-cern] where I discussed Open Source advantages in tackling converged infrastructure challenges. Here is my [slidedeck]({{ site.url }}/assets/CI_presentation_26Feb2013.pdf). Just a quick heads up, there's some animation that's lost in the pdf export as well as color commentary during almost every slide.
 
-So for my demo I needed two boxes running QEMU/KVM/GlusterFS.  This would provide the compute and storage hypervisor layers.  As I only have a single laptop to tour Europe with, I obviously needed a nested KVM environment.  
+During the presentation I demo'd out the new QEMU/GlusterFS native integration leveraging libgfapi. For those wondering what that means: there's no need for FUSE anymore and QEMU leverages GlusterFS natively on the back end. Awesome.
 
-If you're got enough hardware feel free to skip the Enable Nested virtualization section and skip ahead to the Base OS installation.
+For my demo I needed two boxes running QEMU/KVM/GlusterFS to provide the compute and storage hypervisor layers. As I only had a single laptop to tour Europe with, I needed a nested KVM environment.
 
-This wasn't as easy envionment to get up and running, this is alpha code boys and girls so expect to roll your sleeves up.  Ok with that out of the way, I'd like to walk through the steps I did in order to get my demo envionment up and running.  These installation assumes you have Fedora 18 installed and updated with virt-manager and KVM installed.
+If you've got enough hardware feel free to skip the Enable Nested Virtualization section and jump ahead to Base OS Installation.
+
+This wasn't an easy environment to get up and running. This is alpha code, so expect to roll your sleeves up. These instructions assume you have Fedora 18 installed and updated with virt-manager and KVM installed.
+
 
 # Enable Nested Virtualization
-Since we're going to want to install an OS on our VM running on our Gluster/QEMU cluster that we're building, we'll need to enable Nested Virtualization. Let's first check and see if nested virtualization is enabled.  If it responds with an N then No.  If yes, skip this section to the install.
 
-{% highlight rub  %}
-$ cat /sys/module/kvm_intel/parameters/nested
-N
-{% endhighlight %}
+Since we're going to install an OS on a VM running on the Gluster/QEMU cluster we're building, we'll need nested virtualization. Check if it's already enabled:
 
-If it's not we'll need to load a KVM specific module with the nested option loaded.  The easist way to change this is using the modprobe configuration files:
+```bash
+cat /sys/module/kvm_intel/parameters/nested
+```
 
-{% highlight rub  %}
-$ echo “options kvm-intel nested=1″ | sudo tee /etc/modprobe.d/kvm-intel.conf
-{% endhighlight %}
+If it returns `N`, load the KVM module with the nested option via modprobe config:
 
-Reboot your machine once the changes have been made and check again to see if the feature is enabled:
+```bash
+echo "options kvm-intel nested=1" | sudo tee /etc/modprobe.d/kvm-intel.conf
+```
 
-{% highlight rub  %}
-$ cat /sys/module/kvm_intel/parameters/nested
-Y
-{% endhighlight %}
+Reboot and verify:
 
-That's it we're done with prepping the host.
+```bash
+cat /sys/module/kvm_intel/parameters/nested
+```
+
+Should return `Y`. Host prep is done.
+
 
 # Install VMs OS
-Starting with my base Fedora laptop, I've installed virt-manager for VM management.  I wanted to use Boxes, but it's not designed for this type of configuration. So. Create your new VM, I selected the "Fedora http install" as I didn't have an iso laying around. Also http install=awesome.
+
+Starting with the base Fedora laptop, I used virt-manager for VM management. I wanted to use Boxes, but it's not designed for this type of configuration.
+
+Create a new VM and select the Fedora HTTP install option. I didn't have an ISO around, and HTTP install is great anyway.
 
 ![multisite](/assets/gluster01-150x150.png){:class="img-responsive"}
 
-To do this, select the http install option and enter the nearest available location.  
+Select the HTTP install option and enter the nearest available mirror.
 
 ![multisite](/assets/gluster02-150x150.png){:class="img-responsive"}
 
-For me this was the Masaryk University, Brno (where I happened to be sitting during [Dev Days 2013][dev-days-2013]
+For me this was Masaryk University, Brno (where I happened to be sitting during [Dev Days 2013][dev-days-2013]):
 
-{% highlight rub  %}
+```text
 http://ftp.fi.muni.cz/pub/linux/fedora/linux/releases/18/Fedora/x86_64/os/
-{% endhighlight %}
+```
 
-I went with an 8 gig base disk to start (we'll add another one in a bit), gave the VM 1G of ram and a default vCPU.  Start the VM build and install.
+I went with an 8GB base disk, 1GB RAM, and a default vCPU. Start the VM build and install.
 
 ![multisite](/assets/gluster03-150x150.png){:class="img-responsive"}
 
-The install will take a bit longer as it's downloading the install files during the intial boot.
+The install takes a bit longer since it downloads files during the initial boot.
 
 ![multisite](/assets/gluster04-150x150.png){:class="img-responsive"}
 
-Select the language you want to use and continue to the installation summary screen.  Here we'll want to change the software selection option.
+Select your language and continue to the installation summary screen. Change the software selection option.
 
 ![multisite](/assets/gluster05-150x150.png){:class="img-responsive"}
 
-and select the minimal install:
+Select minimal install:
 
 ![multisite](/assets/gluster06-150x150.png){:class="img-responsive"}
 
-during the installation, go ahead and set the root password:
+During installation, set the root password:
 
 ![multisite](/assets/gluster07-150x150.png){:class="img-responsive"}
 
-Once the installation is complete, the VM will reboot.  Once done, power it down.  Although we've enable Nested Virtualization, we need to pass the CPU flags onto the VM.
+Once installation is complete, the VM will reboot. Power it down. We need to pass the CPU flags to the VM before proceeding.
 
-In the virt-manager window right click on the VM, and select open. In the VM window, select view > details.  Rather than guessing the cpu architecture, select the copy from host and select Ok.
+In virt-manager, right-click the VM and select open. In the VM window, select View > Details. Rather than guessing the CPU architecture, select "Copy from host" and click OK.
 
 ![multisite](/assets/gluster08-150x150.png){:class="img-responsive"}
 
-While you're here go ahead and add an additional 20 gig virtual drive.  Make sure you select virtio for the drive type!
+While you're here, add an additional 20GB virtual drive. Make sure you select virtio for the drive type.
 
 ![multisite](/assets/gluster09-150x150.png){:class="img-responsive"}
 
-Boot your VM up and let's get started.
+Boot the VM and let's get started.
 
-# Base installation components
 
-You'll need to install some base components before you get started installing GlusterFS or QEMU.
+# Base Installation Components
 
-After logging in as root,
+Install some base components before getting started with GlusterFS or QEMU. After logging in as root:
 
-{% highlight rub  %}
+```bash
 yum update
-yum install nettools wget xfsprogs binutils 
-{% endhighlight %}
+yum install nettools wget xfsprogs binutils
+```
 
-Now we're going to create the mount point and format the additional drive we just installed.
+Create the mount point and format the additional drive:
 
-{% highlight rub  %}
+```bash
 mkdir -p /export/brick1
 mkfs.xfs -i size=512 /dev/vdb
-{% endhighlight %}
+```
 
-We'll need to edit our fstab and add this as well, so that it will remain persistent going forward after any reboots.
-add the following line to /etc/fstab
+Add it to fstab so it persists across reboots:
 
-{% highlight rub  %}
-/dev/vdb /export/brick1 xfs defaults 1 2 
-{% endhighlight %}
+```text
+/dev/vdb /export/brick1 xfs defaults 1 2
+```
 
-Once you're done with this, let's go ahead and mount the drive.
+Mount it:
 
-{% highlight rub  %}
+```bash
 mount -a && mount
-{% endhighlight %}
+```
 
-# Firewalls.  YMMV
-it may be just me (I'm sure it is) but I struggled getting gluster to work with firewalld on fedora 18.  This is not reccomeneded in production envionments, but for our all in VM on a laptop deployment, I just disabled and removed firewalld.
 
-{% highlight rub  %}
+# Firewalls. YMMV
+
+It may be just me, but I struggled getting Gluster to work with firewalld on Fedora 18. Not recommended in production, but for an all-in VM on a laptop deployment, I just disabled and removed it:
+
+```bash
 yum remove firewalld
-{% endhighlight %}
+```
+
 
 # Gluster 3.4.0 Alpha Installation
-First thing we'll need to do on our VM is configure and enable the gluster repo.
 
-{% highlight rub  %}
+Configure and enable the Gluster repo on the VM:
+
+```bash
 wget http://download.gluster.org/pub/gluster/glusterfs/qa-releases/3.4.0alpha/Fedora/glusterfs-alpha-fedora.repo
-{% endhighlight %}
-
-and move it to /etc/yum.repos.d/
-
-{% highlight rub  %}
 mv glusterfs-alpha-fedora.repo /etc/yum.repos.d/
-{% endhighlight %}
+```
 
-Now we enable the repo and install glusterfs:
+Update and install:
 
-{% highlight rub  %}
+```bash
 yum update
 yum install glusterfs-server glusterfs-devel
-{% endhighlight %}
+```
 
-Important to note here we need the gluster-devel package for the QEMU integration we'll be testing.  Once done we'll start the  glusterd service and verify that it's working.
+The `glusterfs-devel` package is required for the QEMU integration we'll be testing.
 
-# break break 2nd VM
-Ok folks, if you've made it here, get a coffee and do the install again on a 2nd VM.  You'll need the 2nd replication VM target before you proceed.
-{% highlight rub  %}
+
+# Break: Build a Second VM
+
+If you've made it here, get a coffee and do the install again on a second VM. You'll need a second replication target before proceeding.
+
+```text
 </end coffee break>
-{% endhighlight %}
+```
 
-# break break Network Prepping both VMs
-As we're on the private nat'd network on our laptop that virt-manager is managing, we'll need to update our VMs we create and assign static addresses, as well as editing the /etc/hosts file to add both servers with thier addresses.  We're not proud here people, this is a test envionment, if you want to use proper DNS, I won't judge if you don't.
 
-1) change both VMs to using static addresses in the nat range.
-2) change VMs hostnames
-3) update both VMs /etc/hosts to include both nodes.  This is hacky but expedient.
+# Network Prep: Both VMs
 
-# back to Gluster
+We're on the private NAT'd network that virt-manager is managing, so we'll need static addresses on both VMs and updated `/etc/hosts` entries. Not proud here -- this is a test environment.
 
-start and verify the gluster services on both VMs.
+1. Assign static addresses to both VMs in the NAT range
+2. Set hostnames on both VMs
+3. Update `/etc/hosts` on both nodes to include both servers
 
-{% highlight rub  %}
+
+# Back to Gluster
+
+Start and verify the Gluster service on both VMs:
+
+```bash
 service glusterd start
 service glusterd status
-{% endhighlight %}
+```
 
-On either host, we'll need to create the gluster volume and set it for replication.
-{% highlight rub  %}
+On either host, create the Gluster volume and configure it for replication:
+
+```bash
 gluster volume create vmstor replica 2 ci01.local:/export/brick1 ci02.local:/export/brick1
-{% endhighlight %}
+```
 
-Now we'll start the volume we just created
-{% highlight rub  %}
+Start the volume:
+
+```bash
 gluster volume start vmstor
-{% endhighlight %}
+```
 
-Verify that everything is good, if this returns fine, you're up and running with GlusterFS!
-{% highlight rub  %}
+Verify:
+
+```bash
 gluster volume info
-{% endhighlight %}
+```
 
-# building QEMU dependancies
-let's get some prereqs for getting the latest qemu up and running
+If this returns cleanly, you're up and running with GlusterFS.
 
-{% highlight rub  %}
+
+# Building QEMU Dependencies
+
+Install prerequisites:
+
+```bash
 yum install lvm2-devel git gcc-c++ make glib2-devel pixman-devel
-{% endhighlight %}
+```
 
-Now we'll download QEMU:
+Clone QEMU:
 
-{% highlight rub  %}
+```bash
 git clone git://git.qemu-project.org/qemu.git
-{% endhighlight %}
+```
 
-The rest is pretty standard compiling from source.  you'll start with configuring your build.  I'll trim the target list to save time as I know I'm not going to use many of the QEMU supported architectures.
-{% highlight rub  %}
+Configure the build. I trimmed the target list to save time since I knew I wouldn't need most QEMU-supported architectures:
+
+```bash
 ./configure --enable-glusterfs --target-list=i386-softmmu,x86_64-softmmu,x86_64-linux-user,i386-linux-user
-{% endhighlight %} 
+```
 
-With that done everything on this host is done, and we're ready to start building VMs using GlusterFS natively bypassing fuse and leveraging thin provisioning. W00!
+With that done, everything on this host is ready. We can start building VMs using GlusterFS natively, bypassing FUSE and leveraging thin provisioning.
+
 
 # Creating Virtual Disks on GlusterFS
-{% highlight rub  %}
+
+```bash
 qemu-img create gluster://ci01:0/vmstor/test01?transport=socket 5G
-{% endhighlight %}
+```
 
-Breaking this down, we're using qemu-img to create a disk natively on GlusterFS that's five gigs in size.  I'm looking for some more information about what the transport socket is, expect an answer soonish.
+This uses `qemu-img` to create a 5GB disk image natively on GlusterFS. The transport socket parameter controls the communication method between QEMU and GlusterFS.
 
-# Build a VM and install an OS onto the GlusterFS mounted disk image
 
-At this point you'll want something to actually install on your image.  I went with TinyCore because as it is I'm already pushing up against the limitations of this laptop with nested virtualization.  You can download [TinyCore Linux here][tiny-core].	
+# Build a VM and Install onto the GlusterFS Disk Image
 
-{% highlight rub  %}
-qemu-system-x86_64 --enable-kvm -m 1024 -smp 4 -drive file=gluster://ci01/vmstor/test01,if=virtio -vnc 192.168.122.209:1 --cdrom /home/theron/CorePlus-current.iso
-{% endhighlight %}
+You'll want something to actually install on the image. I went with TinyCore because I was already pushing up against the limits of this laptop with nested virtualization. [Download TinyCore Linux here][tiny-core].
 
-This is the quickest way to get this moving, I skipped using Virsh for the demo, and am assigning the VNC IP and port manually.  Once the VM starts up you should be able to connect to the VM from your external host and start the install process.
+```bash
+qemu-system-x86_64 --enable-kvm -m 1024 -smp 4 \
+  -drive file=gluster://ci01/vmstor/test01,if=virtio \
+  -vnc 192.168.122.209:1 \
+  --cdrom /home/theron/CorePlus-current.iso
+```
+
+I skipped using Virsh for the demo and assigned the VNC IP and port manually. Once the VM starts up you can connect to it from your external host and start the install.
 
 ![multisite](/assets/gluster10-150x150.png){:class="img-responsive"}
 
-To get the install going, select the harddrive that was build with qemu-img and follow the OS install procedures.
+Select the hard drive built with `qemu-img` and follow the OS install procedure.
 
-# finished!
-At this point you're done and you can start testing and submitting bugs!
-I'd expect to see some interesting things with OpenStack in this space as well as tighter oVirt integration moving forward.
-Let me know what you think about this guide and if it was useful.
 
-# side note
-Also, something completely related.  I'm pleased to announce that I've joined the Open Source and Standards team at [Redhat][redhat] working to promote and assist making upstream projects wildly successful.  If you're unsure what that means or you're wondering why Red Hat cares about upstream projects, PLEASE reach out and say hello.
+# Finished
 
-# References:
-* [nested KVM][nested-kvm]
+At this point you're done and can start testing and submitting bugs. I'd expect to see some interesting things with OpenStack in this space as well as tighter oVirt integration moving forward. Let me know if this guide was useful.
+
+
+# Side Note
+
+Something completely related: I'm pleased to announce that I've joined the Open Source and Standards team at [Red Hat][redhat], working to promote and assist in making upstream projects wildly successful. If you're unsure what that means or why Red Hat cares about upstream projects, please reach out and say hello.
+
+
+# References
+
+* [Nested KVM][nested-kvm]
 * [KVM VNC][kvm-vnc]
 * [Using QEMU to boot VM on GlusterFS][qemu-gluster-boot]
 * [QEMU downloads][qemu-download]
-* [QEMU Gluster native file system integration][qemu-glusterfs]
-
-
+* [QEMU GlusterFS native integration][qemu-glusterfs]
 
 
 [gluster-cern]: http://www.gluster.org/community/documentation/index.php/Planning/CERN_Workshop
