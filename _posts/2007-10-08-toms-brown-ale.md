@@ -50,6 +50,6 @@ Single step. Saccharification at 155°F for 60 minutes, mash-out at 167°F for 5
 
 ---
 
-This one I'll keep brewing. The story behind it is reason enough.
+This one I'll keep brewing.
 
 [bjcp]: https://www.bjcp.org
