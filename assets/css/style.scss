@@ -267,11 +267,22 @@ a {
 /* ── Footer ─────────────────────────────────────────────────── */
 
 /* Single row: copyright (left) | attribution (center) | resume (right) */
+/* Override Minima's text-align: center on .site-footer */
+.site-footer {
+  text-align: left;
+
+  .wrapper {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 .footer-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0;
+  width: 100%;
 }
 
 .footer-copyright {
@@ -287,6 +298,7 @@ a {
   justify-content: center;
   gap: 0.4rem;
   flex: 1;
+  line-height: 1;  /* prevent default div spacing from pushing it down */
 }
 
 .footer-attr-label {
