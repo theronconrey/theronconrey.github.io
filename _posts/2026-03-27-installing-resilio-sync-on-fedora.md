@@ -74,7 +74,7 @@ Verify the service is up and open `http://localhost:8888`:
 systemctl --user status resilio-sync
 ```
 
-You'll be prompted to set a username and password and name the device. From there you can add folders, generate share keys, and connect other machines.
+From here, you'll see a link to Resilio's site to get a key. It's free for non-commercial use and the signup remains straightforward. After applying the license, you'll be prompted to set a username and password and name the device. From there you can add folders, generate share keys, and connect other machines.
 
 # Updates
 
