@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Installing Resilio Sync on Fedora the Right Way"
+title: "Installing Resilio Sync on Fedora 43"
 date: 2026-03-27
 ---
 
