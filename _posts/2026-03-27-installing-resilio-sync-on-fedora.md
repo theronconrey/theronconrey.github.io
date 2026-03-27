@@ -34,7 +34,7 @@ The package puts the binary at `/usr/bin/rslsync`, a default config at `/etc/rsl
 
 # Running it as your own user
 
-For a desktop, run Sync under your own account. It's more natural for personal files and keeps permissions simple.
+For a desktop, I tend to run Sync under my own account. It feels more integrated for personal files and keeps permissions simple.
 
 The upstream unit file is written for system mode, so you need to fix the `WantedBy` target before enabling the user service — otherwise it won't start correctly in a user session:
 
