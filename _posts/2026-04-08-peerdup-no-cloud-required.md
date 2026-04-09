@@ -12,7 +12,7 @@ What I wanted was cli driven, scriptable, and open source for bare metal servers
 
 I wanted something that keeps files in sync across my machines — fast, encrypted, and without routing everything through someone else's servers. Every major solution I looked at either required a cloud account, imposed storage limits, or made me nervous about what was happening to my data in transit. So I built one.
 
-It's called peerdup. It's open source, self-hosted, and built around a simple idea: your files should travel directly between your devices whereever they are. It shouldn't be difficult.
+It's called [peerdup](https://github.com/theronconrey/peerdup). It's open source, self-hosted, and built around a simple idea: your files should travel directly between your devices whereever they are. It shouldn't be difficult.
 
 # How it works
 
@@ -40,7 +40,7 @@ The relay is there for the hard cases: when one of your devices is behind a symm
 
 ## Two sync modes
 
-peerdup ships with two modes, depending on your setup:
+[peerdup](https://github.com/theronconrey/peerdup) ships with two modes, depending on your setup:
 
 | Mode | Registry needed? | Discovery | Access control |
 |------|-----------------|-----------|----------------|
@@ -59,7 +59,7 @@ The local mode is great if all your devices are on the same network and you want
 
 **Conflicts** — Three resolution strategies: last-write-wins, rename-on-conflict, or manual review — configurable per share.
 
-**Limits** — Bandwidth throttling. Set per-share upload and download limits so peerdup doesn't saturate your connection.
+**Limits** — Bandwidth throttling. Set per-share upload and download limits so [peerdup](https://github.com/theronconrey/peerdup) doesn't saturate your connection.
 
 **Ops** — Docker + Caddy stack. One script gets the registry and relay running with automatic Let's Encrypt TLS.
 
@@ -75,6 +75,8 @@ The installer walks you through whether to also set up a registry on that machin
 
 For those who prefer containers, the Docker Compose stack brings up the registry, relay, and Caddy reverse proxy with automatic TLS, you just need a domain and a public-facing host. Run `./start.sh` and it handles the rest. Transparently, this is not working without some level of tinkering. This is where I'm currently focused on making the installation smoother.
 
+<p style="text-align: center; margin-top: 1em;"><a href="https://github.com/theronconrey/peerdup">View on GitHub</a></p>
+
 # Where it stands today
 
-peerdup is a pet project in active development. The core sync loop works, the CLI is functional, and the Docker deployment path is solid. There's still a lot of surface area to improve — better observability, broader platform testing, documentation depth. If this is something that is interesting to you, reach out and say hello!
+[peerdup](https://github.com/theronconrey/peerdup) is a pet project in active development. The core sync loop works, the CLI is functional, and the Docker deployment path is solid. There's still a lot of surface area to improve — better observability, broader platform testing, documentation depth. If this is something that is interesting to you, reach out and say hello!
