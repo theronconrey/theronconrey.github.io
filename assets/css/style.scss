@@ -50,6 +50,12 @@ body {
   line-height: 1.6;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 a {
   color: #ccc;
   text-decoration: none;
@@ -177,6 +183,7 @@ img {
 .page-content {
   background-color: #000;
   padding: 2rem 0;
+  flex: 1;
 }
 
 
