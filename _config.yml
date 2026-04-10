@@ -1,10 +1,6 @@
 title: Forty Eight Degrees
 description: fortyeightdegrees.com
 url: "https://fortyeightdegrees.com"
-theme: minima
-
-minima:
-  social_links: []
 
 plugins:
   - jekyll-feed
