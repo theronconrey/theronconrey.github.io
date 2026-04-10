@@ -36,11 +36,6 @@ title: Gravity Calculator
   .calc-hero h1 em { font-style: italic; color: var(--amber-lt); }
   .calc-hero p { color: var(--text2); margin-top: 0.4rem; font-size: 0.95rem; }
 
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    color: var(--text3); font-size: 0.85rem; text-decoration: none;
-    margin-bottom: 1.5rem; transition: color 0.15s;
-  }
-
   .calc-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -156,14 +151,14 @@ title: Gravity Calculator
         <div class="calc-field">
           <label class="calc-label">Original Gravity (OG)</label>
           <div class="calc-input-wrap">
-            <input type="number" id="abv-og" placeholder="1.110" step="0.001" min="1.000" max="1.200" oninput="calcABV()"/>
+            <input type="number" id="abv-og" placeholder="1.110" step="0.001" min="1.000" max="1.200"/>
             <span class="calc-input-unit">SG</span>
           </div>
         </div>
         <div class="calc-field">
           <label class="calc-label">Final Gravity (FG)</label>
           <div class="calc-input-wrap">
-            <input type="number" id="abv-fg" placeholder="1.010" step="0.001" min="0.990" max="1.200" oninput="calcABV()"/>
+            <input type="number" id="abv-fg" placeholder="1.010" step="0.001" min="0.990" max="1.200"/>
             <span class="calc-input-unit">SG</span>
           </div>
         </div>
@@ -191,7 +186,7 @@ title: Gravity Calculator
         <div class="calc-field">
           <label class="calc-label">Original Gravity (OG)</label>
           <div class="calc-input-wrap">
-            <input type="number" id="pot-og" placeholder="1.110" step="0.001" min="1.000" max="1.200" oninput="calcPotential()"/>
+            <input type="number" id="pot-og" placeholder="1.110" step="0.001" min="1.000" max="1.200"/>
             <span class="calc-input-unit">SG</span>
           </div>
           <span class="calc-hint">Assumes full attenuation to 1.000</span>
@@ -258,7 +253,7 @@ title: Gravity Calculator
       <span class="calc-range-chip active">${cat}</span>`;
   }
 
-  window.calcABV = function() {
+  function calcABV() {
     const og  = parseFloat(document.getElementById('abv-og').value);
     const fg  = parseFloat(document.getElementById('abv-fg').value);
     const val = document.getElementById('abv-value');
@@ -278,7 +273,7 @@ title: Gravity Calculator
     renderRange('abv-range', abv, og);
   };
 
-  window.calcPotential = function() {
+  function calcPotential() {
     const og  = parseFloat(document.getElementById('pot-og').value);
     const val = document.getElementById('pot-value');
     const res = document.getElementById('pot-result');
@@ -294,5 +289,9 @@ title: Gravity Calculator
     setResult(val, res, abv, '%');
     sub.textContent = `at full attenuation`;
     renderRange('pot-range', abv, og);
-  };
+  }
+
+  document.getElementById('abv-og').addEventListener('input', calcABV);
+  document.getElementById('abv-fg').addEventListener('input', calcABV);
+  document.getElementById('pot-og').addEventListener('input', calcPotential);
 </script>
