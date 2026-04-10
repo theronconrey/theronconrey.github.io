@@ -4,11 +4,11 @@ title: "Introducing peerdup: BitTorrent-backed private file replication"
 date: 2026-04-08
 ---
 
-I've used similar products for years. I've even written blog posts about them. The reality is products like Resilio's Sync were overkill for my usecase. Home use felt like overkill. Datacenter level geo-replication? Also not a great fit.
+I've used similar products for years. I've even written blog posts about [them](https://www.resilio.com/blog/sync-hacks-how-to-use-bittorrent-sync-as-geo-replication-for-storage). The reality is Resilio's Sync is awesome, but overkill for my usecase. For both home use and datacenter level geo-replication, it just wasn't a clean fit.
 
 # The problem it solves
 
-What I wanted was cli driven, scriptable, and open source for bare metal servers. Get the files back to a NAS, and then let it handle backups, snapshots or whatever via BTRFS or ZFS. For my desktop, I wanted something I can bake into GNOME natively to sync directories with ease.
+What I wanted was cli driven, scriptable, and open source for bare metal servers. Get the files back to a NAS, and then let it handle backups, snapshots or whatever via BTRFS or ZFS. For my desktop, I wanted something I can bake into GNOME natively to sync directories with ease. For servers, I wanted something I could push with ansible.
 
 I wanted something that keeps files in sync across my machines — fast, encrypted, and without routing everything through someone else's servers. Every major solution I looked at either required a cloud account, imposed storage limits, or made me nervous about what was happening to my data in transit. So I built one.
 
