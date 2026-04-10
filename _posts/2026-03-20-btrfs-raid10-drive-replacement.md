@@ -23,18 +23,7 @@ sudo btrfs device stats /mnt/data
 ```
 
 When you start seeing non-zero `read_io_errs` or `corruption_errs` on a
-device, it's time to act. In my case:
-
-```bash
-[/dev/sdg].read_io_errs    4
-[/dev/sdg].write_io_errs   0
-[/dev/sdg].flush_io_errs   0
-[/dev/sdg].corruption_errs 0
-[/dev/sdg].generation_errs 0
-```
-
-Four uncorrectable reads. The drive wasn't dead yet, but the trend was clear.
-
+device, it's time to monitor. When the count increases dramatically, it's time to do something.
 
 # The fstab trap
 
