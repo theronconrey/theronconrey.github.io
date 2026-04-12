@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "peerdup: a week of fixes"
+title: "peerdup: a weekend of fixes"
 date: 2026-04-12
 ---
 
