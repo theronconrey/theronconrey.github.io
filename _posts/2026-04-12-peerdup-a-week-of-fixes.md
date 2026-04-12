@@ -4,7 +4,7 @@ title: "peerdup: a weekend of fixes"
 date: 2026-04-12
 ---
 
-When I wrote the [introductory post](https://theronconrey.github.io/2026/04/08/peerdup-no-cloud-required/) last week, peerdup worked - but "worked" was carrying a lot of heavy lifting in that sentance. The sync loop ran. Files moved between machines. The CLI did what you asked. But if you actually beat on it, you'd find a pile of edge cases that ranged from annoying to genuinely broken. So this weekend I wanted to get it sorted out.
+When I wrote the [introductory post](https://theronconrey.github.io/2026/04/08/peerdup-no-cloud-required/) last week, peerdup worked - but "worked" was carrying a lot of heavy lifting in that sentence. The sync loop ran. Files moved between machines. The CLI did what you asked. But if you actually beat on it, you'd find a pile of edge cases that ranged from annoying to genuinely broken. So this weekend I wanted to get it sorted out.
 
 # Sync engine
 
