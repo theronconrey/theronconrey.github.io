@@ -4,17 +4,17 @@ title: "peerdup: a week of fixes"
 date: 2026-04-12
 ---
 
-When I wrote the [introductory post](https://theronconrey.github.io/2026/04/08/peerdup-no-cloud-required/) last week, peerdup worked — but "worked" was carrying a lot of heavy lifting in that sentance. The sync loop ran. Files moved between machines. The CLI did what you asked. But if you actually beat on it, you'd find a pile of edge cases that ranged from annoying to genuinely broken. So this weekend I wanted to get it sorted out.
+When I wrote the [introductory post](https://theronconrey.github.io/2026/04/08/peerdup-no-cloud-required/) last week, peerdup worked - but "worked" was carrying a lot of heavy lifting in that sentance. The sync loop ran. Files moved between machines. The CLI did what you asked. But if you actually beat on it, you'd find a pile of edge cases that ranged from annoying to genuinely broken. So this weekend I wanted to get it sorted out.
 
 # Sync engine
 
 The biggest category of bugs. File sync sounds simple until you actually implement it, and then it turns out there are a lot of ways to get it wrong.
 
-**Efficient renames and moves.** When a folder gets reorganized — files renamed, moved into subdirectories, whatever — peerdup would previously just re-transfer everything. That's wasteful and slow. The fix: when a peer receives a new torrent layout, peerdup now moves existing files into place *before* libtorrent checks pieces. If the data is already there under a different path, it gets repositioned, not re-downloaded. This works by matching files by name and size against the incoming layout and pre-positioning any matches. Stale files and empty directories from the prior layout get cleaned up automatically in the same pass.
+**Efficient renames and moves.** When a folder gets reorganized - files renamed, moved into subdirectories, whatever - peerdup would previously just re-transfer everything. That's wasteful and slow. The fix: when a peer receives a new torrent layout, peerdup now moves existing files into place *before* libtorrent checks pieces. If the data is already there under a different path, it gets repositioned, not re-downloaded. This works by matching files by name and size against the incoming layout and pre-positioning any matches. Stale files and empty directories from the prior layout get cleaned up automatically in the same pass.
 
 **Ping-pong.** This one took a while to diagnose. Two peers would sync, both see the resulting filesystem changes, both react, and the two daemons would end up in an endless loop of overwriting each other. The fix was to pause the filesystem watcher during the SYNCING state so the daemon doesn't react to its own incoming changes. Queued events are drained cleanly when the transition to SEEDING completes.
 
-**Bidirectional sync.** An earlier version had "owner immunity" — the share owner's version always won. That sounds reasonable until you think about what it means in practice: if the non-owner machine changed a file, that change could silently disappear. Reverted that. Both sides now accept remote changes, with sequence numbers on the LAN wire format determining which version wins when there's a genuine conflict.
+**Bidirectional sync.** An earlier version had "owner immunity" - the share owner's version always won. That sounds reasonable until you think about what it means in practice: if the non-owner machine changed a file, that change could silently disappear. Reverted that. Both sides now accept remote changes, with sequence numbers on the LAN wire format determining which version wins when there's a genuine conflict.
 
 **Bootstrap on empty shares.** Joining a share that had no files yet crashed the daemon. Fixed.
 
@@ -24,7 +24,7 @@ The biggest category of bugs. File sync sounds simple until you actually impleme
 
 The LAN multicast wire format went through three revisions this weekend.
 
-v2 added peer names to multicast packets, so you can actually tell which machine is which when you run `peerdup share peers`. v3 added per-share `info_hash` to the packets — the daemon now detects when it's looking at a stale hash and automatically switches to the remote torrent. v4 added per-share sequence numbers, which is what makes conflict resolution work without a registry.
+v2 added peer names to multicast packets, so you can actually tell which machine is which when you run `peerdup share peers`. v3 added per-share `info_hash` to the packets - the daemon now detects when it's looking at a stale hash and automatically switches to the remote torrent. v4 added per-share sequence numbers, which is what makes conflict resolution work without a registry.
 
 One subtle fix: the daemon was only sending multicast to the multicast group address, which works fine between devices on the same WiFi AP, but doesn't reach wired machines when the AP doesn't forward multicast. Added a subnet broadcast fallback to `255.255.255.255` so wired and wireless peers can find each other reliably.
 
@@ -44,23 +44,23 @@ this is still a work in progress. not for prod use. yada yada yada.
 
 `peerdup status` now shows real health information: whether the database is reachable, whether the TTL sweep is running, an overall `ok`/`degraded`/`error` status, and peer and share counts. Previously it returned basically nothing useful.
 
-`peerdup registry health` and `peerdup registry status` were added to let you inspect the registry connection directly — version, uptime, TLS config, token validity.
+`peerdup registry health` and `peerdup registry status` were added to let you inspect the registry connection directly - version, uptime, TLS config, token validity.
 
 For those running their own infrastructure, there's also an optional Prometheus endpoint now. Counters for RPCs, announces, and peers online; histograms for latency and TTL sweep duration. Disabled by default, configurable in `config.toml`.
 
 # Bandwidth policies
 
-Share owners can now publish advisory rate limits from the registry. All members receive the policy via the live peer event stream and apply it to their libtorrent handle immediately. Local per-share caps always win — if you've set a local limit, the registry can't override it. `0` means unlimited.
+Share owners can now publish advisory rate limits from the registry. All members receive the policy via the live peer event stream and apply it to their libtorrent handle immediately. Local per-share caps always win - if you've set a local limit, the registry can't override it. `0` means unlimited.
 
 # Operator tooling
 
 `peerdup-registry-admin` is a new standalone CLI that connects directly to the registry gRPC without needing the daemon to be running. Useful for server-side administration: health checks, listing and removing peers, listing and purging shares, tailing the audit log.
 
-`peerdup-setup` now walks through mTLS configuration if you're connecting to a registry that requires it — prompts for CA cert, client cert, and key, and writes them to `config.toml`.
+`peerdup-setup` now walks through mTLS configuration if you're connecting to a registry that requires it - prompts for CA cert, client cert, and key, and writes them to `config.toml`.
 
 # GNOME extension
 
-A few quality-of-life improvements on the desktop side. The top bar now shows live upload/download rates inline while a share is actively syncing (`↑ 1.2M ↓ 4.8M`). The popup menu gained a colored registry health dot — green when connected and healthy, yellow when degraded, red when unreachable.
+A few quality-of-life improvements on the desktop side. The top bar now shows live upload/download rates inline while a share is actively syncing (`↑ 1.2M ↓ 4.8M`). The popup menu gained a colored registry health dot - green when connected and healthy, yellow when degraded, red when unreachable.
 
 New share and join share dialogs are available via the popup menu when `zenity` is installed. Nothing fancy, just enough to avoid needing a terminal for common operations.
 
@@ -76,7 +76,7 @@ There was a gnarly `registry.proto` descriptor pool clash that was causing the i
 
 ---
 
-There's still a lot left to do. The Docker deployment path needs work — I mentioned that in the first post and it's still true. Broader platform testing. Documentation could go deeper. But the sync engine is noticeably more solid than it was Friday, and the observability and bits means it's something I can actually run on real machines with a better understanding of what is going on.
+There's still a lot left to do. The Docker deployment path needs work - I mentioned that in the first post and it's still true. Broader platform testing. Documentation could go deeper. But the sync engine is noticeably more solid than it was Friday, and the observability and bits means it's something I can actually run on real machines with a better understanding of what is going on.
 
 If you're using peerdup or just curious about any of this, feel free to open an issue or reach out directly.
 
