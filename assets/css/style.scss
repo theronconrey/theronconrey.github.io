@@ -353,7 +353,8 @@ img {
   color: #888;
 
   .wrapper {
-    padding: 0 1.5rem;
+    max-width: none;
+    padding: 0 2rem;
   }
 }
 
