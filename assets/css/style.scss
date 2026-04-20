@@ -366,42 +366,14 @@ img {
 }
 
 .footer-copyright {
-  flex: 1;
   color: #888;
   font-size: 0.9rem;
-}
-
-.footer-attribution {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  line-height: 1;
-}
-
-.footer-attr-label {
-  color: #555;
-  font-size: 0.8rem;
-
-  a {
-    color: #555;
-    &:hover { color: #888; }
-  }
-}
-
-.footer-claude svg {
-  width: 18px;
-  height: 18px;
-  fill: #cc785c;
 }
 
 .footer-resume {
-  flex: 1;
   color: #888;
   text-decoration: none;
   font-size: 0.9rem;
-  text-align: right;
 }
 
 
