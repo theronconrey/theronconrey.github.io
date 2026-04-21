@@ -157,23 +157,12 @@ img {
     gap: 0.75rem;
   }
 
-  .nav-mastodon svg {
-    width: 22px;
-    height: 22px;
-    fill: #6364ff;
-  }
-
-  .nav-rss a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-  }
-
-  .nav-rss svg {
-    width: 22px;
-    height: 22px;
-    fill: #f26522;
-    &:hover { fill: #ff8c42; }
+  .nav-mastodon i,
+  .nav-linkedin i,
+  .nav-github i,
+  .nav-rss i {
+    font-size: 22px;
+    color: #fff;
   }
 }
 
